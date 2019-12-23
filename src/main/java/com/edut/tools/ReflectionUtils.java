@@ -1,0 +1,221 @@
+package com.edut.tools;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+
+/**
+ * 反射的 Utils 函数集合
+ * 提供访问私有变量, 获取泛型类型 Class, 提取集合中元素属性等 Utils 函数
+ * 
+ * 来自:https://blog.csdn.net/qq_25106373/article/details/80974491?utm_source=blogxgwz1
+ */
+public class ReflectionUtils {
+
+    /**
+     * 将反射时的 "检查异常" 转换为 "运行时异常"
+     * @return
+     */
+	  public static IllegalArgumentException convertToUncheckedException(Exception ex)  {
+		  if(ex instanceof IllegalAccessException //非法权限
+		  || ex instanceof IllegalArgumentException //非法参数
+		  || ex instanceof NoSuchMethodException //没这个方法
+		  ){
+			  throw new IllegalArgumentException("反射异常", ex);
+		  }else{
+	            throw new IllegalArgumentException(ex);
+		  }
+	  }
+	  /**
+	   * 通过反射,
+	   * 获得定义 Class时声明的 父类的泛型参数的类型
+       * 如: public EmployeeDao extends BaseDao<Employee, String>
+	   * @param clazz
+	   * @param index
+	   * @return
+	   */
+	  public static Class getSuperClassGenricType(Class clazz, int index){
+		  /* 
+		   * 查阅https://www.cnblogs.com/maokun/p/6773203.html
+		   * ---------------------------------------------
+		   * 
+		   * 1. getGenericSuperclass  返回直接继承的父类（包含泛型参数）
+		   * 2. getSuperclass   返回直接继承的父类（由于编译擦除，没有显示泛型参数）
+		   * 
+		   * -------------------------------------------
+		   * 翻译：得到带泛型的直接父类
+		   * 
+		   */
+		  Type genType  = clazz.getGenericSuperclass();
+		  
+		  /* ParameterizedType - 参数化类型 - 简单理解：有没泛型
+		   * 查阅：https://blog.csdn.net/JustBeauty/article/details/81116144
+		   * -----------------------------------
+		   * 
+		   * 如果不是 -- ParameterizedType 
+		   * 返回 顶级父类 Object
+		   * ------------------------------------
+		   * 翻译：如果父类不带参数，直接返回 Object
+		   */
+		  if(!(genType  instanceof ParameterizedType)){
+	            return Object.class;
+	       }
+		  
+		  /*
+		   * 获取泛型参数
+		   * ----------------------
+		   * 翻译：父类带参数，获取父类参数
+		   */
+		  Type [] params = ((ParameterizedType)genType).getActualTypeArguments();
+		  
+		  /*
+		   * 检查 index 
+		   */
+		  if(index >= params.length || index < 0){
+	            return Object.class;
+	        }
+		  
+		  /*
+		   * 不是 Class 返回 Object
+		   */
+		  if(!(params[index] instanceof Class)){
+	            return Object.class;
+	        }
+		  
+		  return (Class) params[index];
+	  }
+	  
+	  /**
+	   *  通过反射, 获得 Class 定义中声明的父类的泛型参数类型 
+	   *  如: public EmployeeDao extends BaseDao<Employee, String>
+	   */
+	 @SuppressWarnings("unchecked")
+	public static<T> Class<T> getSuperGenericType(Class clazz){
+		 return getSuperClassGenricType(clazz, 0);
+	 }
+	 
+//============  未看懂   ========================================
+	  /**
+     * 循环向上转型, 获取对象的 DeclaredMethod
+     * @param object
+     * @param methodName
+     * @param parameterTypes
+     * @return
+     */
+	public static Method getDeclaredMethod(Object object, String methodName, Class<?>[] parameterTypes){
+	  for(Class<?> superClass = object.getClass(); 
+		  superClass != Object.class; 
+		  superClass = superClass.getSuperclass()
+		){
+		  try {
+			//superClass.getMethod(methodName, parameterTypes);
+			return superClass.getDeclaredMethod(methodName, parameterTypes);
+			
+			} catch (NoSuchMethodException e) {
+				//Method 不在当前类定义, 继续向上转型
+			}
+		  	//..
+	  	}
+  		return null;
+	}
+	/**
+	* 使 filed 变为可访问
+	* @param field
+	*/
+	public static void makeAccessible(Field field){
+		if(!Modifier.isPublic(field.getModifiers())){
+			field.setAccessible(true);
+		}	
+	 }
+
+	/**
+* 循环向上转型, 获取对象的 DeclaredField
+* @param object
+* @param filedName
+* @return
+ */
+ public static Field getDeclaredField(Object object, String filedName){
+
+	        for(Class<?> superClass = object.getClass(); superClass != Object.class; superClass = superClass.getSuperclass()){
+	    try {
+	        return superClass.getDeclaredField(filedName);
+	    } catch (NoSuchFieldException e) {
+	        //Field 不在当前类定义, 继续向上转型
+	    }
+	        }
+	        return null;
+	    }
+  /**
+      * 直接调用对象方法, 而忽略修饰符(private, protected)
+      * @param object
+      * @param methodName
+      * @param parameterTypes
+      * @param parameters
+      * @return
+      * @throws InvocationTargetException
+      * @throws IllegalArgumentException
+      */
+     public static Object invokeMethod(Object object, String methodName, Class<?> [] parameterTypes,
+             Object [] parameters) throws InvocationTargetException{
+         
+         Method method = getDeclaredMethod(object, methodName, parameterTypes);
+         
+         if(method == null){
+             throw new IllegalArgumentException("Could not find method [" + methodName + "] on target [" + object + "]");
+         }
+         
+         method.setAccessible(true);
+         
+         try {
+             return method.invoke(object, parameters);
+         } catch(IllegalAccessException e) {}
+         
+         return null;
+     }
+     
+     /**
+      * 直接设置对象属性值, 忽略 private/protected 修饰符, 也不经过 setter
+      * @param object
+      * @param fieldName
+      * @param value
+      */
+     public static void setFieldValue(Object object, String fieldName, Object value){
+         Field field = getDeclaredField(object, fieldName);
+         
+         if (field == null)
+             throw new IllegalArgumentException("Could not find field [" + fieldName + "] on target [" + object + "]");
+         
+         makeAccessible(field);
+         
+         try {
+             field.set(object, value);
+         } catch (IllegalAccessException e) {}
+     }
+     
+     /**
+      * 直接读取对象的属性值, 忽略 private/protected 修饰符, 也不经过 getter
+      * @param object
+      * @param fieldName
+      * @return
+      */
+     public static Object getFieldValue(Object object, String fieldName){
+         Field field = getDeclaredField(object, fieldName);
+         
+         if (field == null)
+             throw new IllegalArgumentException("Could not find field [" + fieldName + "] on target [" + object + "]");
+         
+         makeAccessible(field);
+         
+         Object result = null;
+         
+         try {
+             result = field.get(object);
+         } catch (IllegalAccessException e) {}
+         
+         return result;
+     }
+
+}
