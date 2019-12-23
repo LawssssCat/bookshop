@@ -12,6 +12,7 @@ import java.util.List;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
+import org.apache.commons.dbutils.handlers.ScalarHandler;
 
 import com.edut.dao.Dao;
 import com.edut.tools.JdbcUtils;
@@ -126,6 +127,8 @@ public class BaseDao<T> implements Dao<T>{
 			/*
 			 * BeanHandler 封装成传入的 clazz实体类型
 			 */
+			//BeanHandler：将结果集中的第一行数据封装到一个对应的JavaBean实例中
+			//（把每条记录封装成对象，适合取一条记录）
 			return queryRunner.query(conn, sql, new BeanHandler<T>(clazz), args); 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -141,6 +144,8 @@ public class BaseDao<T> implements Dao<T>{
 		Connection conn = null ; 
 		try {
 			conn= JdbcUtils.getConn() ;
+			
+			// BeanListHandler 结果集中的每一行数据都封装到一个对应的JavaBean实例中，存放到List里
 			return queryRunner.query(conn, sql, new BeanListHandler<T>(clazz), args) ;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -149,6 +154,40 @@ public class BaseDao<T> implements Dao<T>{
 			JdbcUtils.close(conn);
 		} 
 		return null;
+	}
+
+	@Override
+	public <V> V getSingleVal(String sql,  Object... args) {
+		Connection conn = null ; 
+		try {
+			conn = JdbcUtils.getConn();
+			
+			//ScalarHandler 将结果集第一行的某一列放到某个对象中
+			return queryRunner.query(conn, sql, new ScalarHandler<V>(), args) ; 
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			JdbcUtils.close(conn);
+		}
+		return null;
+	}
+
+	@Override
+	public void batch(String sql, Object[]... params) {
+		Connection  conn = null ; 
+		try {
+			conn = JdbcUtils.getConn() ;
+			
+			queryRunner.batch(conn, sql, params) ; 
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			JdbcUtils.close(conn);
+		} 
+		
 	}
 	
 }

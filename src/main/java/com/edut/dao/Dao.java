@@ -15,4 +15,14 @@ public interface Dao<T> {
 	public T query(String sql , Object ... args );
 	
 	public List<T> queryForList(String sql , Object ... args );
+	
+	/**
+	 * 獲取某一個值 
+	 */
+	public <V> V getSingleVal(String sql ,  Object ... args ) ;
+	
+	/**
+	 * 批量 修改/添加/刪除 數據
+	 */
+	public void batch(String sql , Object[] ... params);
 }

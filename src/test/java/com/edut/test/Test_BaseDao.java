@@ -41,7 +41,7 @@ public class Test_BaseDao {
 		System.out.println(query.toString() );
 	}
 	
-	@Test
+	//@Test
 	public void test_queryForList() {
 		String sql = "select * from book_table " ;
 		List<Book> list = bookDao.queryForList(sql );
@@ -51,4 +51,31 @@ public class Test_BaseDao {
 		}
 	}
 	
+	//@Test
+	public void test_getSingleVal() {
+		String sql = "select publishing_date from book_table where  book_id = ? " ;
+		Date date  = bookDao.getSingleVal(sql, 1);
+		System.out.println(date);
+	}
+	
+	//@Test
+	public void test_getSingleVal2() {
+		String sql = "select count(book_id) from book_table " ;
+		long count   = bookDao.getSingleVal(sql);
+		System.out.println(count);
+		
+	}
+	
+	@Test
+	public void test_batch() {
+		test_queryForList() ;
+		
+		String sql = "update book_table set sales_amount = ? , STORE_NUMBER = ? Where book_id= ?" ;
+		
+		//注意，這裡！sql 是怎麼寫的！！
+		bookDao.batch(sql, new Integer[]{1,1 , 1 } , new Integer[] {2,2 , 2 });
+		
+		
+		test_queryForList() ;
+	}
 }
