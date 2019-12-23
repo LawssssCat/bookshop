@@ -6,23 +6,23 @@ public class Page <T>{
 //-----------------  私有属性  ------------------------------
 	
 	//当前第几页
-	private int pageNo;
+	private Integer pageNo;
 	
 	//当前页的List
 	private List<T> list ; 
 	
 	//当前页显示多少条记录
-	private int pageSize = 3 ; 
+	private Integer pageSize = 3 ; 
 	
 	//共有多少条记录
-	private int totalItemNumber ;
+	private Integer totalItemNumber ;
 	
 	
 //-----------------  构造函数  ------------------------------
 	/**
 	 * 构造器中需要对 pageNo 进行初始化
 	 */
-	public Page(int pageNo) {
+	public Page(Integer pageNo) {
 		super();
 		this.pageNo = pageNo;
 	}
@@ -32,8 +32,8 @@ public class Page <T>{
 	/**
 	 * 获取总页数
 	 */
-	public int getTotalPageNumber() {
-		int totalPageNumber = totalItemNumber / pageSize ;
+	public Integer getTotalPageNumber() {
+		Integer totalPageNumber = totalItemNumber / pageSize ;
 		if(totalItemNumber%pageSize!=0) {
 			totalPageNumber++ ; 
 		}
@@ -53,14 +53,14 @@ public class Page <T>{
 		return getPageNo()>1; 
 	}
 	
-	public int getNextPage() {
+	public Integer getNextPage() {
 		if(hasNextPage()) {
 			return getPageNo() + 1  ; 
 		}else {
 			return getPageNo()  ; 
 		}
 	}
-	public int getPrevPage() {
+	public Integer getPrevPage() {
 		if(hasPrevPage()) {
 			return getPageNo() -1  ; 
 		}else{
@@ -70,7 +70,7 @@ public class Page <T>{
 	}
 	
 	
-	public void setPageNo(int pageNo) {
+	public void setPageNo(Integer pageNo) {
 		//从第一页开始
 		if (pageNo <= 0) {
 			pageNo = 1 ; 
@@ -91,26 +91,26 @@ public class Page <T>{
 	}
 
 
-	public int getPageSize() {
+	public Integer getPageSize() {
 		return pageSize;
 	}
 
 
-	public void setPageSize(int pageSize) {
+	public void setPageSize(Integer pageSize) {
 		this.pageSize = pageSize;
 	}
 
 
-	public int getTotalItemNumber() {
+	public Integer getTotalItemNumber() {
 		return totalItemNumber;
 	}
 
 
-	public void setTotalItemNumber(int totalItemNumber) {
+	public void setTotalItemNumber(Integer totalItemNumber) {
 		this.totalItemNumber = totalItemNumber;
 	}
 
-	public int getPageNo() {
+	public Integer getPageNo() {
 		return pageNo;
 	}
 

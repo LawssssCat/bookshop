@@ -1,5 +1,7 @@
 package com.edut.dao;
 
+import java.util.List;
+
 public interface Dao<T> {
 	/**
 	 * 执行 INSERT 操作，返回插入后的记录的 ID
@@ -11,4 +13,6 @@ public interface Dao<T> {
 	public void update(String sql , Object ... args );
 	
 	public T query(String sql , Object ... args );
+	
+	public List<T> queryForList(String sql , Object ... args );
 }

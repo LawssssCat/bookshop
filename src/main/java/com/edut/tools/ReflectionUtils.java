@@ -45,6 +45,9 @@ public class ReflectionUtils {
 		   * 1. getGenericSuperclass  返回直接继承的父类（包含泛型参数）
 		   * 2. getSuperclass   返回直接继承的父类（由于编译擦除，没有显示泛型参数）
 		   * 
+		   * -------------------------------------------
+		   * 翻译：得到带泛型的直接父类
+		   * 
 		   */
 		  Type genType  = clazz.getGenericSuperclass();
 		  
@@ -54,6 +57,8 @@ public class ReflectionUtils {
 		   * 
 		   * 如果不是 -- ParameterizedType 
 		   * 返回 顶级父类 Object
+		   * ------------------------------------
+		   * 翻译：如果父类不带参数，直接返回 Object
 		   */
 		  if(!(genType  instanceof ParameterizedType)){
 	            return Object.class;
@@ -61,6 +66,8 @@ public class ReflectionUtils {
 		  
 		  /*
 		   * 获取泛型参数
+		   * ----------------------
+		   * 翻译：父类带参数，获取父类参数
 		   */
 		  Type [] params = ((ParameterizedType)genType).getActualTypeArguments();
 		  
