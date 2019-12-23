@@ -14,6 +14,7 @@ public class Test_JdbcUtils {
 		Connection conn  = null  ; 
 		try {
 			conn = JdbcUtils.getConn();
+			System.out.println("@@@@@@@@@@@ connection="+conn);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

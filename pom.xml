@@ -53,6 +53,13 @@
 	    <artifactId>mysql-connector-java</artifactId>
 	    <version>5.1.13</version>
 	</dependency>
+	<!-- https://mvnrepository.com/artifact/commons-dbutils/commons-dbutils -->
+	<dependency>
+	    <groupId>commons-dbutils</groupId>
+	    <artifactId>commons-dbutils</artifactId>
+	    <version>1.6</version>
+	</dependency>
+	
 <!-- ===============  log4j  ========================= -->
 	<!-- 整合log4j -->
 	<!-- 通过使用Log4j，我们可以控制日志信息输送的目的地 -->
