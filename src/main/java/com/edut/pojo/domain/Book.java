@@ -3,19 +3,20 @@ package com.edut.pojo.domain;
 import java.util.Date;
 
 public class Book {
-	private Integer book_id ;
+	private Integer bookID ;
 	private String author ; 
 	private String title ; 
 	private Double price ; 
-	private Date publishing_Date ; 
-	private Integer sales_amount ; 
-	private Integer Store_Number ; 
+	private Date publishingDate ; 
+	private Integer salesAmount ; 
+	private Integer StoreNumber ; 
 	private String remark ;
-	public Integer getBook_id() {
-		return book_id;
+	
+	public Integer getBookID() {
+		return bookID;
 	}
-	public void setBook_id(Integer book_id) {
-		this.book_id = book_id;
+	public void setBookID(Integer bookID) {
+		this.bookID = bookID;
 	}
 	public String getAuthor() {
 		return author;
@@ -35,23 +36,23 @@ public class Book {
 	public void setPrice(Double price) {
 		this.price = price;
 	}
-	public Date getPublishing_Date() {
-		return publishing_Date;
+	public Date getPublishingDate() {
+		return publishingDate;
 	}
-	public void setPublishing_Date(Date publishing_Date) {
-		this.publishing_Date = publishing_Date;
+	public void setPublishingDate(Date publishingDate) {
+		this.publishingDate = publishingDate;
 	}
-	public Integer getSales_amount() {
-		return sales_amount;
+	public Integer getSalesAmount() {
+		return salesAmount;
 	}
-	public void setSales_amount(Integer sales_amount) {
-		this.sales_amount = sales_amount;
+	public void setSalesAmount(Integer salesAmount) {
+		this.salesAmount = salesAmount;
 	}
-	public Integer getStore_Number() {
-		return Store_Number;
+	public Integer getStoreNumber() {
+		return StoreNumber;
 	}
-	public void setStore_Number(Integer store_Number) {
-		Store_Number = store_Number;
+	public void setStoreNumber(Integer storeNumber) {
+		StoreNumber = storeNumber;
 	}
 	public String getRemark() {
 		return remark;
@@ -61,13 +62,23 @@ public class Book {
 	}
 	@Override
 	public String toString() {
-		return "Book [book_id=" + book_id + ", author=" + author + ", title=" + title + ", price=" + price
-				+ ", publishing_Date=" + publishing_Date + ", sales_amount=" + sales_amount + ", Store_Number="
-				+ Store_Number + ", remark=" + remark + "]";
+		return "Book [bookID=" + bookID + ", author=" + author + ", title=" + title + ", price=" + price
+				+ ", publishingDate=" + publishingDate + ", salesAmount=" + salesAmount + ", StoreNumber=" + StoreNumber
+				+ ", remark=" + remark + "]";
 	}
-	
-	
-	
-	
-	
+	public Book(Integer bookID, String author, String title, Double price, Date publishingDate, Integer salesAmount,
+			Integer storeNumber, String remark) {
+		super();
+		this.bookID = bookID;
+		this.author = author;
+		this.title = title;
+		this.price = price;
+		this.publishingDate = publishingDate;
+		this.salesAmount = salesAmount;
+		StoreNumber = storeNumber;
+		this.remark = remark;
+	}
+	public Book() {
+		super();
+	}
 }

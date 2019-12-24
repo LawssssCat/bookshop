@@ -9,5 +9,10 @@
 <body>
 <!-- 开始光标位置 -->
 <h3>Hello! Welcome to bookshop!</h3>
+
+<%
+	response.sendRedirect(request.getContextPath()+"/bookServlet?method=getBooks") ; 
+%>
+
 </body>
 </html>

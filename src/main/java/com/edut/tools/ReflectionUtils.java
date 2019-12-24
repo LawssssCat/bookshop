@@ -37,6 +37,7 @@ public class ReflectionUtils {
 	   * @param index
 	   * @return
 	   */
+	  @SuppressWarnings("unchecked")
 	  public static Class getSuperClassGenricType(Class clazz, int index){
 		  /* 
 		   * 查阅https://www.cnblogs.com/maokun/p/6773203.html
@@ -132,23 +133,22 @@ public class ReflectionUtils {
 	 }
 
 	/**
-* 循环向上转型, 获取对象的 DeclaredField
-* @param object
-* @param filedName
-* @return
- */
- public static Field getDeclaredField(Object object, String filedName){
-
-	        for(Class<?> superClass = object.getClass(); superClass != Object.class; superClass = superClass.getSuperclass()){
-	    try {
-	        return superClass.getDeclaredField(filedName);
-	    } catch (NoSuchFieldException e) {
-	        //Field 不在当前类定义, 继续向上转型
-	    }
-	        }
-	        return null;
-	    }
-  /**
+	* 循环向上转型, 获取对象的 DeclaredField
+	* @param object
+	* @param filedName
+	* @return
+	 */
+	 public static Field getDeclaredField(Object object, String filedName){
+        for(Class<?> superClass = object.getClass(); superClass != Object.class; superClass = superClass.getSuperclass()){
+		    try {
+		        return superClass.getDeclaredField(filedName);
+		    } catch (NoSuchFieldException e) {
+		        //Field 不在当前类定义, 继续向上转型
+		    }
+        }
+        return null;
+	 }
+	 /**
       * 直接调用对象方法, 而忽略修饰符(private, protected)
       * @param object
       * @param methodName
@@ -159,20 +159,16 @@ public class ReflectionUtils {
       * @throws IllegalArgumentException
       */
      public static Object invokeMethod(Object object, String methodName, Class<?> [] parameterTypes,
-             Object [] parameters) throws InvocationTargetException{
-         
-         Method method = getDeclaredMethod(object, methodName, parameterTypes);
-         
+    	Object [] parameters) throws InvocationTargetException{
+    	 Method method = getDeclaredMethod(object, methodName, parameterTypes);
          if(method == null){
-             throw new IllegalArgumentException("Could not find method [" + methodName + "] on target [" + object + "]");
+             throw new IllegalArgumentException(
+    		 "Could not find method [" + methodName + "] on target [" + object + "]");
          }
-         
          method.setAccessible(true);
-         
          try {
              return method.invoke(object, parameters);
          } catch(IllegalAccessException e) {}
-         
          return null;
      }
      
