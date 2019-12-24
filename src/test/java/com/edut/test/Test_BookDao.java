@@ -10,6 +10,7 @@ import com.edut.dao.BookDao;
 import com.edut.dao.imp.BookDaoImpl;
 import com.edut.pojo.domain.Book;
 import com.edut.pojo.web.CriteriaBook;
+import com.edut.pojo.web.Page;
 
 public class Test_BookDao {
 	private BookDao bookDao = new BookDaoImpl() ; 
@@ -20,13 +21,27 @@ public class Test_BookDao {
 		System.out.println(book);
 	}
 
+	private CriteriaBook cb = new CriteriaBook(0, Integer.MAX_VALUE, 1);
+	
+	
 	@Test
 	public void testGetPage() {
-		fail("Not yet implemented");
+		Page<Book> page = bookDao.getPage(cb);
+		
+		System.out.println("@@@@@@@@@  ---------  Page Info  -----------");
+		System.out.println("page:"+page);
+		System.out.println("PageNo:"+page.getPageNo());
+		System.out.println("PageSize:"+page.getPageSize());
+		System.out.println("TotalItemNumber:"+page.getTotalItemNumber());
+		System.out.println("TotalPageNumber:"+page.getTotalPageNumber());
+		page.getList().forEach(b -> System.out.println(b));
+		System.out.println("@@@@@@@@@  ---------  Page Info 2  -----------");
+		System.out.println("hasNextPage:"+page.hasNextPage());
+		System.out.println("nextPage:"+page.getNextPage());
+		System.out.println("hasPrevPage:"+page.hasPrevPage());
+		System.out.println("prevPage:"+page.getPrevPage());
+		
 	}
-	
-	
-	private CriteriaBook cb = new CriteriaBook(0, Integer.MAX_VALUE, 2);
 	
 
 	@Test

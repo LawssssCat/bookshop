@@ -19,8 +19,23 @@ public class BookDaoImpl  extends BaseDao<Book> implements BookDao{
 
 	@Override
 	public Page<Book> getPage(CriteriaBook cb) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		//No
+		Page<Book> page = new Page<>(cb.getPageNo());
+		
+		//检验cb的No正确性
+		cb.setPageNo(page.getPageNo());
+		
+		//List
+		List<Book> list = getPageList(cb , page.getPageSize()) ;
+		
+		//totalBookNumber
+		Integer totalItemNumber = (int) getTotalBookNumber(cb);
+		
+		page.setTotalItemNumber(totalItemNumber);
+		page.setList(list);
+		
+		return page;
 	}
 
 	@Override

@@ -80,6 +80,15 @@ public class Page <T>{
 		this.pageNo = pageNo;
 	}
 
+	
+
+
+	@Override
+	public String toString() {
+		return "Page [pageNo=" + pageNo + ", list=" + list + ", pageSize=" + pageSize + ", totalItemNumber="
+				+ totalItemNumber + ", totalPageNumber="+getTotalPageNumber()+ "]";
+	}
+
 
 	public List<T> getList() {
 		return list;
