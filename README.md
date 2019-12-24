@@ -1,5 +1,25 @@
 # BookShop  - 书店项目
 
+1.  架构分析
+2.  DAO 设计
+3.  BaseDAO 实现
+4.  BookDAO 实现
+5.  翻页实现
+6.  翻页小结
+7.  查看图书详细信息
+8.  加入购物车
+9.  购物车操作
+10. Ajax 修改购物车单品数量 
+11. 简单验证和复杂验证
+12. 剩余的 DAO 代码
+13. 实现结账(非事务)
+14. Filter + ThreadLoca 实现事务操作
+15. 显示交易记录
+16. 解决相对路径问题
+17. PPT 源代码
+
+---
+
 ## 功能分析
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20191223085215525.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0xhd3Nzc3NDYXQ=,size_16,color_FFFFFF,t_70)
 

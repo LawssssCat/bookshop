@@ -11,9 +11,16 @@ public class BookDaoImpl  extends BaseDao<Book> implements BookDao{
 
 	@Override
 	public Book getBook(int id) {
-		String sql = "SELECT *  "
-				+ "from book_table "
-				+ "where book_id = ? " ; 
+		String sql = "SELECT "
+				+ " book_id bookid, "
+				+ " author , "
+				+ " title , "
+				+ " PUBLISHING_DATE publishingDate , "
+				+ " SALES_AMOUNT salesAmount , "
+				+ " STORE_NUMBER  StoreNumber , "
+				+ " remark "
+				+ " from book_table "
+				+ " where book_id = ? " ; 
 		return query(sql , id);
 	}
 
@@ -46,6 +53,9 @@ public class BookDaoImpl  extends BaseDao<Book> implements BookDao{
 		return getSingleVal(sql, cb.getMinPrice() , cb.getMaxPrice());
 	}
 
+	/**
+	 * MySQL 分页使用 LIMIT，其中 limit 从 0开始。
+	 */
 	@Override
 	public List<Book> getPageList(CriteriaBook cb, int pageSize) {
 		String sql = "select * "
@@ -61,7 +71,8 @@ public class BookDaoImpl  extends BaseDao<Book> implements BookDao{
 
 	@Override
 	public int getStoreNumber(Integer id) {
-		String sql = "Select Store_Number from book_table "
+		String sql = "Select Store_Number StoreNumber "
+				+ " from book_table "
 				+ "where book_id = ? " ; 
 		return getSingleVal(sql, id);
 	}
