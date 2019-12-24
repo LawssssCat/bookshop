@@ -22,10 +22,51 @@
 
 			return false; 
 		});
-	})
+
+		//实现功能：pageNo 输入框内容改变，触发
+		$("#pageNo").change(function() {
+			//得到当前页码
+			var pageNo = $(this).val() ; 
+			
+			//判断，false=传入字符不合法
+			var flag = false; 
+			//正则判断
+			var reg = /^\d+$/g ; 
+			// 如果 pageNo 是数字
+			if(reg.test(pageNo)) {
+				// 解析成 Int
+				var pageNo = parseInt(pageNo) ;
+				//判断是否在 范围
+				if(pageNo>=1 && pageNo<=parseInt("${page.totalPageNumber}")){
+					flag = true ; 
+				}
+			}
+
+			if(!flag) {
+				$(this).val("");
+				alert("输入页码有误！");
+				return ;
+			}
+			
+			//翻页
+			var criteria = $(":hidden").serialize();
+			var href = "bookServlet?method=getBooks&pageNo="+pageNo + "&" + criteria ; 
+			window.location.href  = href; 
+		}) ; 
+		
+	}) ;
+	
+	//清空搜索记录
+	function clearCriteria() {
+		window.location.href = "bookServlet?method=getBooks" ; 	
+	}
 </script>
 
-
+<style type="text/css">
+td th{
+	
+}
+</style>
 </head>
 <body>
 <!-- 开始光标位置 -->
@@ -36,19 +77,31 @@
 		<br><br>
 		<form action="bookServlet?method=getBooks" method="post" >
 			Price:
-			<input type="text" size="1" name="minPrice"  /><!-- value="${param.minPrice }" -->
+			<input type="text" size="1" name="minPrice" value="${param.minPrice }" /><!-- value="${param.minPrice }" -->
 			 -  
-			<input type="text" size="1" name="maxPrice" /><!-- value="${param.maxPrice }"  -->
-			 &nbsp;&nbsp;
+			<input type="text" size="1" name="maxPrice" value="${param.maxPrice }"  /><!-- value="${param.maxPrice }"  -->
+			 &nbsp;
 			<input type="submit" value="search">
+			 &nbsp;
+			<input type="button" value="clear" onclick="clearCriteria()">
 		</form>
 		
 		<br>
 		<br>
 		<table border="1" >
+		<tr>
+			<th>
+				书名/作者
+			</th>
+			<th>
+				price
+			</th>
+			<th> 
+			</th>
+		</tr>
 		<c:forEach items="${page.list }" var="book">
 		<tr>
-			<td>
+			<td >
 				<a href="">${book.title }</a>
 				<br>
 				${book.author }
