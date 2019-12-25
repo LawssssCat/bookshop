@@ -4,11 +4,16 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 /**
  * map数据结构 key - bookID value - ShoppingCartItem
  */
 public class ShoppingCart {
-	private Map<Integer, ShoppingCartItem> items = new HashMap<>();
+	private Map<Integer, ShoppingCartItem> items  = new HashMap<>() ;
+	
+	
 
 	/**
 	 * 添加书本 - 进购物框

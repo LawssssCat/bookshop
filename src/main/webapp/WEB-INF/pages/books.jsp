@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%><!-- 设置编码 -->
-    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+    <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -63,6 +63,16 @@ td th{
 <!-- 开始光标位置 -->
 
 	<div align="center">
+	
+	<c:if test="${not empty param.bookTitle}">
+		成功把 <font color="red">《${param.bookTitle}》</font> 加入购物车！
+	</c:if>
+	
+	<c:if test="${not empty sessionScope.cart }">
+	<br><br>
+		您的购物车中有 ${sessionScope.cart.bookNumber } 本书 , <a href="">查看购物车</a> 
+	</c:if>
+	
 <!-- ==========  搜索 CriteriaBook  =================================== -->
 		<br><br>
 		<form action="bookServlet?method=getBooks" method="post" >
@@ -101,7 +111,7 @@ td th{
 				${book.price }
 			</td>
 			<td>
-				<a href="">加入购物车</a>
+				<a href="bookServlet?method=addToCart&pageNo=${page.pageNo }&bookID=${book.bookID}&bookTitle=${book.title}">加入购物车</a>
 			</td>
 		</tr>
 		</c:forEach>
