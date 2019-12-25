@@ -54,6 +54,29 @@ public class BookServlet extends HttpServlet {
 		} 
 	}
 	
+	/**
+	 * 展示书详细
+	 */
+	protected void getBook(HttpServletRequest req, HttpServletResponse resp) 
+		throws ServletException, IOException {
+		//根据 id 获取book
+		String bookIDStr = req.getParameter("bookID");
+		
+		Integer bookID = -1 ;
+		try {
+			bookID = Integer.parseInt(bookIDStr) ; 
+		}catch (NumberFormatException e) {}
+		
+		Book book = bookService.getBookById(bookID) ;
+		req.setAttribute("book", book);
+		
+		req.getRequestDispatcher("/WEB-INF/pages/book.jsp").forward(req, resp);
+		
+	}
+	
+	/**
+	 * 展示 所有书 
+	 */
 	protected void getBooks(HttpServletRequest req, HttpServletResponse resp) 
 			throws ServletException, IOException {
 		String pageNoStr = req.getParameter("pageNo");
@@ -78,7 +101,11 @@ public class BookServlet extends HttpServlet {
 		CriteriaBook cb = new CriteriaBook(minPrice, maxPrice, pageNo);
 		
 		Page<Book> page = bookService.getPage(cb);
-		
+		if(page.getList().size() ==0) {
+			req.getRequestDispatcher("/error-01.jsp").forward(req, resp);
+			return ;
+		}else {
+		}
 		req.setAttribute("page", page);
 		req.getRequestDispatcher("/WEB-INF/pages/books.jsp").forward(req, resp);
 	}

@@ -15,6 +15,7 @@ public class BookDaoImpl  extends BaseDao<Book> implements BookDao{
 				+ " book_id bookid, "
 				+ " author , "
 				+ " title , "
+				+ " price , "
 				+ " PUBLISHING_DATE publishingDate , "
 				+ " SALES_AMOUNT salesAmount , "
 				+ " STORE_NUMBER  StoreNumber , "
@@ -30,11 +31,12 @@ public class BookDaoImpl  extends BaseDao<Book> implements BookDao{
 		//No
 		Page<Book> page = new Page<>(cb.getPageNo());
 		
-		//检验cb的No正确性
-		cb.setPageNo(page.getPageNo());
 		
 		//List
 		List<Book> list = getPageList(cb , page.getPageSize()) ;
+		
+		//检验cb的No正确性
+		cb.setPageNo(page.getPageNo());
 		
 		//totalBookNumber
 		Integer totalItemNumber = (int) getTotalBookNumber(cb);
@@ -58,10 +60,18 @@ public class BookDaoImpl  extends BaseDao<Book> implements BookDao{
 	 */
 	@Override
 	public List<Book> getPageList(CriteriaBook cb, int pageSize) {
-		String sql = "select * "
-				+ "from book_table "
-				+ "where price >= ? and price <= ? "
-				+ "limit ? , ? " ; 
+		String sql = " select "
+				+ " book_id bookid, "
+				+ " author , "
+				+ " title , "
+				+ " price , "
+				+ " PUBLISHING_DATE publishingDate , "
+				+ " SALES_AMOUNT salesAmount , "
+				+ " STORE_NUMBER  StoreNumber , "
+				+ " remark "
+				+ " from book_table "
+				+ " where price >= ? and price <= ? "
+				+ " limit ? , ? " ; 
 		
 		int startItem = pageSize*(cb.getPageNo()-1); 
 		
