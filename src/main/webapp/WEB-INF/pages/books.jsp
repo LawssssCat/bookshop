@@ -68,7 +68,7 @@ td th{
 		成功把 <font color="red">《${param.bookTitle}》</font> 加入购物车！
 	</c:if>
 	
-	<c:if test="${not empty sessionScope.cart }">
+	<c:if test="${not empty sessionScope.cart.itemsCollection }">
 	<br><br>
 		您的购物车中有 ${sessionScope.cart.bookNumber } 本书 , <a href="bookServlet?method=getCart&pageNo=${page.pageNo }">查看购物车</a> 
 	</c:if>

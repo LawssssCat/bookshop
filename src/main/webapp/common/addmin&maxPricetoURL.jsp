@@ -13,9 +13,9 @@
 		    var serializeVal = $(":hidden").serialize() ; 
             //添加 上url
            	//this.href ==> a 上面的 href 连接
-            var href = this.href + "&" +  serializeVal ; 
-            window.location.href = href ; 
-            return false; 
+            this.href = this.href + "&" +  serializeVal ; 
+            //window.location.href = href ; 
+            return true; 
         });
 		
     });

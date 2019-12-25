@@ -9,6 +9,7 @@
 
 <script type="text/javascript" src="script/jquery-1.8.3.min.js"></script>
 
+
 <script type="text/javascript">
 	$(function() {
 		$(".delete").click(function() {
@@ -16,21 +17,19 @@
 			var tr = $(this).parent().parent();
 			var title = $.trim(tr.find("td:first").text());
 
-			var flag = confirm("确定要删除"+title+"的信息吗？");
+			var flag = confirm("确定要删除 《"+title+"》 的信息吗？");
 
-			alert(flag);
 			//这里可以直接删，但还是跳转把。
-			if(flag){
-				return true; 
-			}
-			return false; 
+			return flag; 
 		});
 	});
 </script>
 
 
-<!-- 引入 后缀参数 -->
-<jsp:include page="/common/addmin&maxPricetoURL.jsp"></jsp:include>
+ 
+<%-- 引入 后缀参数
+ --%>
+ <jsp:include page="/common/addmin&maxPricetoURL.jsp"></jsp:include>
 
 </head>
 <body>
@@ -54,7 +53,7 @@
 			</td>
 			<td >${item.money }</td>
 			<td>
-				<a href="bookServlet?method=removeItem&itemId=${item.itemId }&pageNo=${param.pageNo }" class="delete">删除</a>
+				<a href="bookServlet?method=removeItem&pageNo=${param.pageNo }&itemId=${item.itemId }" class="delete">删除</a>
 			</td>
 		</tr>
 	</c:forEach>
