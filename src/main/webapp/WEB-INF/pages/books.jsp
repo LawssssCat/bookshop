@@ -70,7 +70,7 @@ td th{
 	
 	<c:if test="${not empty sessionScope.cart }">
 	<br><br>
-		您的购物车中有 ${sessionScope.cart.bookNumber } 本书 , <a href="">查看购物车</a> 
+		您的购物车中有 ${sessionScope.cart.bookNumber } 本书 , <a href="bookServlet?method=getCart&pageNo=${page.pageNo }">查看购物车</a> 
 	</c:if>
 	
 <!-- ==========  搜索 CriteriaBook  =================================== -->

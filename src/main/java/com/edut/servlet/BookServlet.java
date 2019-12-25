@@ -8,6 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.edut.pojo.domain.Book;
 import com.edut.pojo.domain.ShoppingCart;
@@ -42,7 +43,7 @@ public class BookServlet extends HttpServlet {
 			method.setAccessible(true); 
 			method.invoke(this, req , resp ) ; 
 		} catch (NoSuchMethodException e) {
-			// TODO Auto-generated catch block
+			getBooks(req, resp);
 			e.printStackTrace();
 		} catch (SecurityException e) {
 			// TODO Auto-generated catch block
@@ -58,7 +59,36 @@ public class BookServlet extends HttpServlet {
 			e.printStackTrace();
 		} 
 	}
+	//cart 
+	private String cartStr =  "cart"; 
 	
+	protected void removeItem(HttpServletRequest req, HttpServletResponse resp) 
+			throws ServletException, IOException {
+		String itemIdStr = req.getParameter("itemId");
+		Integer itemId = Utils.parseStr(itemIdStr, -1) ; 
+		
+		//TODO id异常处理
+		
+		ShoppingCart cart = ShoppingCartService.getShoppingCart(req, cartStr);
+		
+		cart.removeItem(itemId);
+		
+		if (cart.isEmpty()) {
+			getBooks(req, resp);
+		}else {
+			getCart(req, resp);
+		}
+		
+	}
+	protected void clearCart(HttpServletRequest req, HttpServletResponse resp) 
+			throws ServletException, IOException {
+		req.getSession().removeAttribute(cartStr);
+		getBooks(req , resp) ; 
+	}
+	protected void getCart(HttpServletRequest req, HttpServletResponse resp) 
+			throws ServletException, IOException {
+		req.getRequestDispatcher("/WEB-INF/pages/cartList.jsp").forward(req, resp);
+	}
 	protected void addToCart(HttpServletRequest req, HttpServletResponse resp) 
 			throws ServletException, IOException {
 		//1. 获取商品的 id
@@ -72,7 +102,6 @@ public class BookServlet extends HttpServlet {
 		}
 		
 		//2. 获取购物车对象
-		String cartStr = "cart" ; 
 		ShoppingCart cart = ShoppingCartService.getShoppingCart(req, cartStr); 
 		
 		//3. 调用 BookService 的 addToCart() 方法 把商品放到购物车中

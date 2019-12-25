@@ -33,6 +33,7 @@
     备注:${book.remark }
     <br><br>
     
+    <hr>
 	<a href="bookServlet?method=getBooks&pageNo=${param.pageNo }">继续 购书</a>
 </div>
 
