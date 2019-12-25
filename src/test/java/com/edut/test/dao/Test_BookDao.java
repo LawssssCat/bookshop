@@ -1,4 +1,4 @@
-package com.edut.test;
+package com.edut.test.dao;
 
 import static org.junit.Assert.*;
 

@@ -1,4 +1,4 @@
-package com.edut.test;
+package com.edut.test.tools;
 
 import java.sql.Connection;
 import java.sql.SQLException;
