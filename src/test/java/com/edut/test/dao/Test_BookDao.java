@@ -1,4 +1,4 @@
-package com.edut.test;
+package com.edut.test.dao;
 
 import static org.junit.Assert.*;
 
@@ -17,7 +17,7 @@ public class Test_BookDao {
 
 	@Test
 	public void testGetBook() {
-		Book book = bookDao.getBook(1);
+		Book book = bookDao.getBook(2);
 		System.out.println(book);
 	}
 
@@ -51,7 +51,7 @@ public class Test_BookDao {
 		System.out.println("totalBookNumber : "+totalBookNumber);
 	}
 
-	//@Test
+	@Test
 	public void testGetPageList() {
 		List<Book> pageList = bookDao.getPageList(cb, 3);
 		

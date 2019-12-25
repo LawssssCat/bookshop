@@ -9,9 +9,8 @@ public class Book {
 	private Double price ; 
 	private Date publishingDate ; 
 	private Integer salesAmount ; 
-	private Integer StoreNumber ; 
+	private Integer storeNumber ; 
 	private String remark ;
-	
 	public Integer getBookID() {
 		return bookID;
 	}
@@ -49,10 +48,10 @@ public class Book {
 		this.salesAmount = salesAmount;
 	}
 	public Integer getStoreNumber() {
-		return StoreNumber;
+		return storeNumber;
 	}
 	public void setStoreNumber(Integer storeNumber) {
-		StoreNumber = storeNumber;
+		this.storeNumber = storeNumber;
 	}
 	public String getRemark() {
 		return remark;
@@ -63,7 +62,7 @@ public class Book {
 	@Override
 	public String toString() {
 		return "Book [bookID=" + bookID + ", author=" + author + ", title=" + title + ", price=" + price
-				+ ", publishingDate=" + publishingDate + ", salesAmount=" + salesAmount + ", StoreNumber=" + StoreNumber
+				+ ", publishingDate=" + publishingDate + ", salesAmount=" + salesAmount + ", storeNumber=" + storeNumber
 				+ ", remark=" + remark + "]";
 	}
 	public Book(Integer bookID, String author, String title, Double price, Date publishingDate, Integer salesAmount,
@@ -75,10 +74,12 @@ public class Book {
 		this.price = price;
 		this.publishingDate = publishingDate;
 		this.salesAmount = salesAmount;
-		StoreNumber = storeNumber;
+		this.storeNumber = storeNumber;
 		this.remark = remark;
 	}
 	public Book() {
 		super();
 	}
+	
+	
 }

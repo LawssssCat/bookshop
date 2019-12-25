@@ -1,4 +1,4 @@
-package com.edut.test;
+package com.edut.test.dao;
 
 
 import java.sql.Date;
