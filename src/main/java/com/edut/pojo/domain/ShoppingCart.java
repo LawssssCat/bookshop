@@ -14,7 +14,7 @@ public class ShoppingCart {
 	 * 添加书本 - 进购物框
 	 */
 	public void add(Book book) {
-		Integer itemId = book.getBookID();
+		Integer itemId = getItemId(book);
 		if (hasBook(book)) {
 			// 已经有这本书了
 			ShoppingCartItem item = items.get(itemId);
@@ -30,11 +30,15 @@ public class ShoppingCart {
 		return items.containsKey(book.getBookID());
 	}
 
-	public Map<Integer, ShoppingCartItem> getBooks() {
+	public Map<Integer, ShoppingCartItem> getItems() {
 		return items;
 	}
+	
+	public Integer getItemId(Book book) {
+		return book.getBookID() ; 
+	}
 
-	public Collection<ShoppingCartItem> getItems() {
+	public Collection<ShoppingCartItem> getItemsCollection() {
 		return items.values();
 	}
 

@@ -44,5 +44,13 @@ public class ShoppingCartItem {
 		}
 		this.quantity = quantity;
 	}
+
+	@Override
+	public String toString() {
+		return "ShoppingCartItem [getItemId()=" + getItemId() + ", getMoney()=" + getMoney() + ", getBook()="
+				+ getBook() + ", getQuantity()=" + getQuantity() + "]";
+	}
+	
+	
 	
 }
