@@ -19,11 +19,12 @@ implements AccountDao{
 	}
 
 	@Override
-	public void updateBalance(Integer accountId, float amount) {
+	public void updateBalance(Integer accountId, Double amount) {
 		String sql =  " update account_table set "
 					+ " balance = balance - ? "
 					+ " where account_id = ? " ;
 		update(sql, amount , accountId);
 	}
 	
+
 }

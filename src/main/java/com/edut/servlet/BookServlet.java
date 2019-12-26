@@ -61,6 +61,12 @@ public class BookServlet extends HttpServlet {
 			e.printStackTrace();
 		} 
 	}
+	
+	protected void toPage(HttpServletRequest req, HttpServletResponse resp) 
+			throws Exception {
+		String page = req.getParameter("page");
+		req.getRequestDispatcher("/WEB-INF/pages/"+page+".jsp").forward(req, resp);
+	}
 	//cart 
 	private String cartStr =  "cart"; 
 	

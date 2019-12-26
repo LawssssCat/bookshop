@@ -32,4 +32,13 @@
   	<servlet-name>bookServlet</servlet-name>
   	<url-pattern>/bookServlet</url-pattern>
   </servlet-mapping>
+  
+  <servlet>
+  	<servlet-name>UserServlet</servlet-name>
+  	<servlet-class>com.edut.servlet.UserServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>UserServlet</servlet-name>
+  	<url-pattern>/UserServlet</url-pattern>
+  </servlet-mapping>
 </web-app>

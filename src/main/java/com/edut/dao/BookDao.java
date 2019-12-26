@@ -1,10 +1,12 @@
 package com.edut.dao;
 
+import java.util.Collection;
 import java.util.List;
 
 import com.edut.pojo.domain.Book;
 import com.edut.pojo.web.CriteriaBook;
 import com.edut.pojo.web.Page;
+import com.edut.pojo.web.ShoppingCartItem;
 
 public interface BookDao {
 	/**
@@ -49,6 +51,6 @@ public interface BookDao {
 	 * 批量更新 books 数据表的 storenumber 和 salesnumber 字段的值
 	 * @param items
 	 */
-	//public abstract void batchUpdateStoreNumberAndSalesAmount(
-	//		Collection<ShoppingCartItem> items);
+	public abstract void batchUpdateStoreNumberAndSalesAmount(
+			Collection<ShoppingCartItem> items);
 }

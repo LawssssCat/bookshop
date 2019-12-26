@@ -19,8 +19,8 @@ public interface AccountDao {
 	 * 结账时候
 	 * 
 	 * @param accountId
-	 * @param amount
+	 * @param double1
 	 */
-	public abstract void updateBalance(Integer  accountId , float amount) ;
+	public abstract void updateBalance(Integer  accountId , Double double1) ;
 	
 }

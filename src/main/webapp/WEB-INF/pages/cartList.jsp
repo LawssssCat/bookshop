@@ -140,7 +140,7 @@
 	&nbsp;&nbsp;
 	<a href="bookServlet?method=clearCart&pageNo=${param.pageNo }" >清空购物车</a>
 	&nbsp;&nbsp;
-	<a href="">结账</a>
+	<a href="bookServlet?method=toPage&page=cash&pageNo=${param.pageNo }">进入	结账</a>
 	&nbsp;&nbsp;
 </div>
 </body>

@@ -24,7 +24,7 @@ public class Test_AccountDao {
 	public void testUpdateBalance() {
 		int id = 1; 
 		testGetAccount(id); 
-		accountDao.updateBalance(id, 100);
+		accountDao.updateBalance(id, 100.0);
 		Account account = accountDao.getAccount(id);
 		System.out.println(account);
 	}
