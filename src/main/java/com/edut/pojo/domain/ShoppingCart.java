@@ -93,4 +93,20 @@ public class ShoppingCart {
 		items.remove(itemId) ; 
 	}
 
+	public ShoppingCartItem getItemById(Integer itemId) {
+		return items.get(itemId) ; 
+	}
+	public void setBookQuantity(Integer id, Integer quantity) throws Exception {
+		ShoppingCartItem item = getItemById(id);
+		if(item!=null) {
+			item.setQuantity(quantity); 
+		}else {
+			throw new Exception() ; 
+		}
+	}
+
+	public Double getItemMoney(Integer id) {
+		return getItemById(id).getMoney();
+	}
+
 }

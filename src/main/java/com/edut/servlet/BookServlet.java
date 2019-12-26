@@ -3,6 +3,7 @@ package com.edut.servlet;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -17,6 +18,7 @@ import com.edut.pojo.web.Page;
 import com.edut.service.BookService;
 import com.edut.service.ShoppingCartService;
 import com.edut.tools.Utils;
+import com.google.gson.Gson;
 
 public class BookServlet extends HttpServlet {
 	
@@ -62,6 +64,41 @@ public class BookServlet extends HttpServlet {
 	//cart 
 	private String cartStr =  "cart"; 
 	
+	/**
+	 * 更新 item 里面 书的 数量
+	 */
+	protected void updateItemQuantity(HttpServletRequest req, HttpServletResponse resp) 
+			throws Exception {
+		String idStr = req.getParameter("id"); 
+		String quantityStr = req.getParameter("quantity");
+		Integer id = Utils.parseStr(idStr, -1)  ; 
+		Integer quantity = Utils.parseStr(quantityStr, -1) ;
+		
+		ShoppingCart shoppingCart = ShoppingCartService.getShoppingCart(req, cartStr);
+		shoppingCart.setBookQuantity(id, quantity);
+
+		
+		HashMap<Object, Object> map = new HashMap<>();
+		//====  返回的 json  ======================== 
+		//单个 item 钱
+		Double itemMoney = shoppingCart.getItemMoney(id);
+		map.put("itemMoney", itemMoney ) ; 
+		//quantity
+		map.put("quantity", quantity);
+		//总价
+		Double totalMoney = shoppingCart.getTotalMoney();
+		map.put("totalMoney", totalMoney) ; 
+		//总书 number
+		Integer bookNumber = shoppingCart.getBookNumber();
+		map.put("bookNumber", bookNumber); 
+		
+		Gson gson = new Gson() ; 
+		String json = gson.toJson(map);
+		
+		
+		resp.setContentType("text/javascript");
+		resp.getWriter().write(json);
+	}
 	protected void removeItem(HttpServletRequest req, HttpServletResponse resp) 
 			throws ServletException, IOException {
 		String itemIdStr = req.getParameter("itemId");
@@ -69,6 +106,7 @@ public class BookServlet extends HttpServlet {
 		
 		//TODO id异常处理
 		
+		//ShoppingCart cart = ShoppingCartService.getShoppingCart(req, cartStr);
 		ShoppingCart cart = ShoppingCartService.getShoppingCart(req, cartStr);
 		
 		cart.removeItem(itemId);
