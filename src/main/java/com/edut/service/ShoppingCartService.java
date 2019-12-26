@@ -6,8 +6,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import com.edut.pojo.domain.ShoppingCart;
-import com.edut.pojo.domain.ShoppingCartItem;
+import com.edut.pojo.web.ShoppingCart;
+import com.edut.pojo.web.ShoppingCartItem;
 
 public class ShoppingCartService {
 

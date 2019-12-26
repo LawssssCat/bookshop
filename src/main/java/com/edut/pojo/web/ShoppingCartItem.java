@@ -1,4 +1,6 @@
-package com.edut.pojo.domain;
+package com.edut.pojo.web;
+
+import com.edut.pojo.domain.Book;
 
 /**
  * 属性

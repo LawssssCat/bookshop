@@ -12,9 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.edut.pojo.domain.Book;
-import com.edut.pojo.domain.ShoppingCart;
 import com.edut.pojo.web.CriteriaBook;
 import com.edut.pojo.web.Page;
+import com.edut.pojo.web.ShoppingCart;
 import com.edut.service.BookService;
 import com.edut.service.ShoppingCartService;
 import com.edut.tools.Utils;

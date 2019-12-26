@@ -1,4 +1,4 @@
-package com.edut.pojo.domain;
+package com.edut.pojo.web;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -6,6 +6,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
+import com.edut.pojo.domain.Book;
 
 /**
  * map数据结构 key - bookID value - ShoppingCartItem

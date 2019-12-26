@@ -3,9 +3,9 @@ package com.edut.service;
 import com.edut.dao.BookDao;
 import com.edut.dao.imp.BookDaoImpl;
 import com.edut.pojo.domain.Book;
-import com.edut.pojo.domain.ShoppingCart;
 import com.edut.pojo.web.CriteriaBook;
 import com.edut.pojo.web.Page;
+import com.edut.pojo.web.ShoppingCart;
 
 public class BookService {
 	
