@@ -1,13 +1,20 @@
 package com.edut.service;
 
+import java.util.Collection;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
 import com.edut.dao.AccountDao;
 import com.edut.dao.UserDao;
 import com.edut.dao.imp.AccountDaoImpl;
 import com.edut.dao.imp.UserDaoImpl;
 import com.edut.ex.NoMoneyException;
 import com.edut.pojo.domain.Account;
+import com.edut.pojo.domain.Book;
 import com.edut.pojo.domain.User;
 import com.edut.pojo.web.ShoppingCart;
+import com.edut.pojo.web.ShoppingCartItem;
 
 public class UserService {
 	private UserDao userDao = new UserDaoImpl() ;
@@ -36,6 +43,14 @@ public class UserService {
 		accountDao.updateBalance(accountId, cart.getTotalMoney());
 		
 		//减库存
+		Collection<ShoppingCartItem> items = cart.getItemsCollection();
+		for (ShoppingCartItem item : items) {
+			Integer quantity = item.getQuantity();
+			Book book = item.getBook();
+			bookService
+		}
+		
+		
 		
 		cart.clear();
 	} 
