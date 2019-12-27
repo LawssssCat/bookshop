@@ -8,12 +8,12 @@ public class Utils {
 	 * @param errorValue
 	 * @return
 	 */
-	public static Integer parseStr(String s , Integer errorValue) {
+	public static Integer parseStr(String s , Integer n ) throws NumberFormatException {
 		try {
 			Integer result = Integer.parseInt(s); 
 			return result;  
-		}catch (Exception e) {
-			return errorValue ; 
+		}catch (NumberFormatException e) {
+			return n ; 
 		}
 	}
 }

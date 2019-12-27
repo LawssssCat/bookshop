@@ -12,7 +12,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.edut.ex.FindEmptyException;
 import com.edut.ex.InsufficientBalanceException;
+import com.edut.ex.NoSuchBookException;
 import com.edut.ex.NoSuchUserException;
 import com.edut.pojo.domain.Book;
 import com.edut.pojo.domain.User;
@@ -21,6 +23,7 @@ import com.edut.pojo.web.Page;
 import com.edut.pojo.web.ShoppingCart;
 import com.edut.service.BookService;
 import com.edut.service.ShoppingCartUtils;
+import com.edut.service.TradeService;
 import com.edut.service.UnderStoreException;
 import com.edut.service.UserService;
 import com.edut.tools.Utils;
@@ -28,9 +31,20 @@ import com.google.gson.Gson;
 
 public class BookServlet extends HttpServlet {
 	
-	private BookService bookService = new BookService() ; 
-	private UserService userService = new UserService() ; 
-
+	private BookService bookService  ; 
+	private UserService userService ; 
+	private TradeService tradeService  ;
+	
+	
+	
+	@Override
+	public void init() throws ServletException {
+		bookService = new BookService() ; 
+		userService = new UserService() ; 
+		tradeService = new TradeService(userService ,bookService) ;
+	}
+	
+	
 	/**
 	 * 
 	 */
@@ -52,8 +66,7 @@ public class BookServlet extends HttpServlet {
 			method.setAccessible(true); 
 			method.invoke(this, req , resp ) ; 
 		} catch (NoSuchMethodException e) {
-			getBooks(req, resp);
-			e.printStackTrace();
+			toErrorPage(req, resp);
 		} catch (SecurityException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -69,35 +82,22 @@ public class BookServlet extends HttpServlet {
 		} 
 	}
 	
-	protected void toPage(HttpServletRequest req, HttpServletResponse resp) 
-			throws Exception {
-		String page = req.getParameter("page");
-		req.getRequestDispatcher("/WEB-INF/pages/"+page+".jsp").forward(req, resp);
-	}
-	
+
+	/**
+	 * 支付！ 
+	 */
 	protected void cash(HttpServletRequest req, HttpServletResponse resp) 
-			throws Exception {
-		String username = req.getParameter("username");
-		//解析失败 不处理
-		Integer accountId = Utils.parseStr(req.getParameter("accountId"),-1);
-		ShoppingCart cart = ShoppingCartUtils.getShoppingCart(req); 
+			throws ServletException, IOException {
 		try {
-			//验证账号
-			userService.validateUser(username, accountId) ; 
-			//验证余额
-			userService.validateBalance(accountId ,cart );
-			//验证库存
-			bookService.validateStore(cart) ; 
+			String username = req.getParameter("username");
+			Integer accountId = Utils.parseStr(req.getParameter("accountId"),-1);
+			ShoppingCart cart = ShoppingCartUtils.getShoppingCart(req);
+			tradeService.cash(username , accountId , cart ) ;
 			
-			//数据库 - 事务操作
-			//1. 扣钱 
-			//2. 扣库存 、 加发货
-			userService.updateBalance(accountId , cart.getTotalMoney());
-			bookService.batchUpdateStoreNumberAndSalesAmount(cart); 
-			
-			//清理 session - cart
-			cart.clear(); 
 			resp.sendRedirect("success.jsp");
+			return ; 
+		}catch(NumberFormatException e ) {
+			toErrorPage(req, resp);
 			return ; 
 		}catch(NoSuchUserException ex) {
 			String errorMsg = "用户不存在或者账号错误!!";
@@ -108,7 +108,7 @@ public class BookServlet extends HttpServlet {
 		}catch (UnderStoreException e) {
 			//库存异常
 			List<Book> underStoreBooks = e.getUnderStoreBooks();
-			StringBuilder sb = new StringBuilder("下面库存不足：") ; 
+			StringBuilder sb = new StringBuilder("下面库存不足：<br>") ; 
 			for (Book book : underStoreBooks) {
 				sb.append(book.getTitle()) ; 
 				sb.append("<br>") ; 
@@ -116,17 +116,16 @@ public class BookServlet extends HttpServlet {
 			req.setAttribute("errorMsg", sb.toString());
 		}
 		//账号验证异常
-		req.getRequestDispatcher("/WEB-INF/pages/cash.jsp").forward(req,resp );
+		toPage(req, resp , "cash");
 	}
 	/**
 	 * 更新 item 里面 书的 数量
 	 */
 	protected void updateItemQuantity(HttpServletRequest req, HttpServletResponse resp) 
-			throws Exception {
-		String idStr = req.getParameter("id"); 
-		String quantityStr = req.getParameter("quantity");
-		Integer id = Utils.parseStr(idStr, -1)  ; 
-		Integer quantity = Utils.parseStr(quantityStr, -1) ;
+			throws ServletException, IOException {
+		try {
+		Integer id = Integer.parseInt(req.getParameter("id")) ; 
+		Integer quantity = Integer.parseInt(req.getParameter("quantity")) ; 
 		
 		ShoppingCart shoppingCart = ShoppingCartUtils.getShoppingCart(req);
 		
@@ -135,81 +134,68 @@ public class BookServlet extends HttpServlet {
 		
 		resp.setContentType("text/javascript");
 		resp.getWriter().write(json);
+		}catch (NumberFormatException e) {
+			toErrorPage(req, resp);
+		}
 	}
 	protected void removeItem(HttpServletRequest req, HttpServletResponse resp) 
-			throws ServletException, IOException {
-		String itemIdStr = req.getParameter("itemId");
-		Integer itemId = Utils.parseStr(itemIdStr, -1) ; 
-		
-		//TODO id异常处理
+			throws ServletException, IOException  {
+		Integer itemId = Integer.parseInt(req.getParameter("itemId")) ;
 		
 		//ShoppingCart cart = ShoppingCartService.getShoppingCart(req, cartStr);
 		ShoppingCart cart = ShoppingCartUtils.getShoppingCart(req);
-		
 		cart.removeItem(itemId);
 		
 		if (cart.isEmpty()) {
 			getBooks(req, resp);
 		}else {
-			getCart(req, resp);
+			toPage(req, resp,"cart");
 		}
 		
 	}
+	
 	protected void clearCart(HttpServletRequest req, HttpServletResponse resp) 
 			throws ServletException, IOException {
-		req.getSession().removeAttribute("cart");
+		ShoppingCartUtils.clearCart(req ) ; 
 		getBooks(req , resp) ; 
 	}
-	protected void getCart(HttpServletRequest req, HttpServletResponse resp) 
-			throws ServletException, IOException {
-		req.getRequestDispatcher("/WEB-INF/pages/cartList.jsp").forward(req, resp);
-	}
+	
 	protected void addToCart(HttpServletRequest req, HttpServletResponse resp) 
 			throws ServletException, IOException {
-		//1. 获取商品的 id
-		//"bookServlet?method=addToCart&pageNo=${page.pageNo }&bookID=${book.bookID}"
-		String bookIDStr = req.getParameter("bookID");
-		Integer bookID = Utils.parseStr(bookIDStr, -1) ;
-		
-		if (bookID<=0) {
-			toErrorPage(req, resp);
-			return ;
-		}
-		
-		//2. 获取购物车对象
-		ShoppingCart cart = ShoppingCartUtils.getShoppingCart(req); 
-		
-		//3. 调用 BookService 的 addToCart() 方法 把商品放到购物车中
 		try {
+			//1. 获取商品的 id
+			//"bookServlet?method=addToCart&pageNo=${page.pageNo }&bookID=${book.bookID}"
+			Integer bookID = Integer.parseInt(req.getParameter("bookID")) ;
+			//2. 获取购物车对象
+			ShoppingCart cart = ShoppingCartUtils.getShoppingCart(req); 
+			//3. 调用 BookService 的 addToCart() 方法 把商品放到购物车中
 			bookService.addToCart(bookID , cart) ;
-		} catch (Exception e) {
+			//4. 直接调用 getBooks() 方法
+			getBooks(req, resp);
+		} catch (NoSuchBookException | NumberFormatException e) {
 			toErrorPage(req, resp);
-			return ;
 		}
 		
-		//4. 直接调用 getBooks() 方法
-		getBooks(req, resp);
 	}
 	/**
 	 * 展示书详细
 	 */
 	protected void getBook(HttpServletRequest req, HttpServletResponse resp) 
 		throws ServletException, IOException {
-		//根据 id 获取book
-		String bookIDStr = req.getParameter("bookID");
-		Integer bookID =Utils.parseStr(bookIDStr,	-1) ;
-		
-		if(bookID<=0) {
-			toErrorPage(req, resp);
-			return ;
+		try {
+			//根据 id 获取book
+			String bookIDStr = req.getParameter("bookID");
+			Integer bookID = Integer.parseInt(bookIDStr);
+			
+			//根据 ID 获取 Book
+			Book book = bookService.getBookById(bookID) ;
+			
+			req.setAttribute("book", book);
+			req.getRequestDispatcher("/WEB-INF/pages/book.jsp").forward(req, resp);
+			
+		}catch (NumberFormatException e) {
+			toErrorPage(req , resp) ; 
 		}
-		
-		//根据 ID 获取 Book
-		Book book = bookService.getBookById(bookID) ;
-		req.setAttribute("book", book);
-		
-		req.getRequestDispatcher("/WEB-INF/pages/book.jsp").forward(req, resp);
-		
 	}
 	
 	/**
@@ -217,30 +203,29 @@ public class BookServlet extends HttpServlet {
 	 */
 	protected void getBooks(HttpServletRequest req, HttpServletResponse resp) 
 			throws ServletException, IOException {
-		String pageNoStr = req.getParameter("pageNo");
-		String minPriceStr = req.getParameter("minPrice");
-		String maxPriceStr = req.getParameter("maxPrice");
-		
-		
-
-		int pageNo = Utils.parseStr(pageNoStr, 1) ; 
-		int minPrice = Utils.parseStr(minPriceStr,0 )  ; 
-		int maxPrice = Utils.parseStr(maxPriceStr,Integer.MAX_VALUE) ;  
-		
-		
-		CriteriaBook cb = new CriteriaBook(minPrice, maxPrice, pageNo);
-		
-		Page<Book> page = bookService.getPage(cb);
-		
-		//查不到数据，转跳错误页
-		if(page.getList().size() ==0) {
+		try {
+			int pageNo = Utils.parseStr(req.getParameter("pageNo"), 1) ; 
+			int minPrice = Utils.parseStr(req.getParameter("minPrice"),0 )  ;
+			int maxPrice = Utils.parseStr(req.getParameter("maxPrice"),Integer.MAX_VALUE) ;
+			
+			CriteriaBook cb = new CriteriaBook(minPrice, maxPrice, pageNo);
+			//FindEmptyException
+			Page<Book> page = bookService.getPage(cb);
+					req.setAttribute("page", page);
+			req.getRequestDispatcher("/WEB-INF/pages/books.jsp").forward(req, resp);
+		}catch (FindEmptyException  e ) {
 			toErrorPage(req , resp) ; 
-			return ;
-		}else {
-			//TODO 。。。。
 		}
-		req.setAttribute("page", page);
-		req.getRequestDispatcher("/WEB-INF/pages/books.jsp").forward(req, resp);
+	}
+	
+	protected void toPage(HttpServletRequest req, HttpServletResponse resp) 
+			throws ServletException, IOException  {
+		String page = req.getParameter("page");
+		toPage(req,resp,page);
+	}
+	protected void toPage(HttpServletRequest req, HttpServletResponse resp , String page) 
+			throws ServletException, IOException  {
+		req.getRequestDispatcher("/WEB-INF/pages/"+page+".jsp").forward(req, resp);
 	}
 	
 	private void toErrorPage(HttpServletRequest req ,  HttpServletResponse resp) 

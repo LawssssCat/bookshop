@@ -46,4 +46,8 @@ public class ShoppingCartUtils {
 		
 		return json;
 	}
+
+	public static void clearCart(HttpServletRequest req) {
+		req.getSession().removeAttribute("cart");
+	}
 }

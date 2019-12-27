@@ -42,7 +42,7 @@
 		</form>
 		
 		<hr>
-		<a  href="bookServlet?method=getCart&pageNo=${param.pageNo }">返回	购物车</a>
+		<a  href="bookServlet?method=toPage&page=cart&pageNo=${param.pageNo }">返回	购物车</a>
 	</center>
 </body>
 </html>
