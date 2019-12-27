@@ -22,6 +22,15 @@ public class UserService {
 	private UserDao userDao = new UserDaoImpl() ;
 	private AccountDao accountDao  = new AccountDaoImpl() ; 
 
+	public User getUserByName(String username) throws NoSuchUserException {
+		User user = userDao.getUser(username);
+		if(user!=null) {
+			return user ;  
+		}else {
+			throw new NoSuchUserException() ; 
+		}
+	}
+	
 	public void validateUser(String username, Integer accountId) throws NoSuchUserException {
 		User user = userDao.getUser(username);
 		if(user!=null) {

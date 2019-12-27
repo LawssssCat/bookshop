@@ -18,7 +18,9 @@ public class TradeService {
 	}
 
 	public void cash(String username, Integer accountId, ShoppingCart cart)
-			throws NoSuchUserException, InsufficientBalanceException, UnderStoreException {
+			throws NoSuchUserException, 
+			InsufficientBalanceException,
+			UnderStoreException {
 		//验证账号
 		userService.validateUser(username, accountId) ; 
 		//验证余额
@@ -32,8 +34,10 @@ public class TradeService {
 		userService.updateBalance(accountId , cart.getTotalMoney());
 		bookService.batchUpdateStoreNumberAndSalesAmount(cart);
 		
-		//trade 记录
 		
+		Integer userId = userService.getUserByName(username).getUserId();
+		//trade 记录
+		tradeDao.saveTrade(userId , cart) ;
 		
 		//清理 session - cart
 		cart.clear(); 
