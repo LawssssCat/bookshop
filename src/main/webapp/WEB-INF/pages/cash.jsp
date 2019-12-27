@@ -13,14 +13,17 @@
 		<br><br>
 		<h3>结账</h3>
 		<br><br>
-		
+		<c:if test="${not empty errorMsg }">
+			<font color="red">${errorMsg }</font>		
+			<br><br>
+		</c:if>
 		您一共买了  <font id="bookNumber">${sessionScope.cart.bookNumber }</font> 本书
 		<br><br>
 		结账金额：¥ ${sessionScope.cart.totalMoney } 
 		
 		<br><br>
 		<hr>
-		<form action="UserServlet?method=cash" method="post">
+		<form action="bookServlet?method=cash" method="post">
 			<table  cellpadding="10" >
 				<tr>
 					<td>信用卡名：</td>

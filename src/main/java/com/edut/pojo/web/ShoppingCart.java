@@ -98,13 +98,9 @@ public class ShoppingCart {
 	public ShoppingCartItem getItemById(Integer itemId) {
 		return items.get(itemId) ; 
 	}
-	public void setBookQuantity(Integer id, Integer quantity) throws Exception {
+	public void setBookQuantity(Integer id, Integer quantity)  {
 		ShoppingCartItem item = getItemById(id);
-		if(item!=null) {
-			item.setQuantity(quantity); 
-		}else {
-			throw new Exception() ; 
-		}
+		item.setQuantity(quantity); 
 	}
 
 	public Double getItemMoney(Integer id) {

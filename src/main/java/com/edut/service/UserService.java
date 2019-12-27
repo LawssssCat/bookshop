@@ -9,7 +9,9 @@ import com.edut.dao.AccountDao;
 import com.edut.dao.UserDao;
 import com.edut.dao.imp.AccountDaoImpl;
 import com.edut.dao.imp.UserDaoImpl;
+import com.edut.ex.InsufficientBalanceException;
 import com.edut.ex.NoMoneyException;
+import com.edut.ex.NoSuchUserException;
 import com.edut.pojo.domain.Account;
 import com.edut.pojo.domain.Book;
 import com.edut.pojo.domain.User;
@@ -21,37 +23,24 @@ public class UserService {
 	private AccountDao accountDao  = new AccountDaoImpl() ; 
 	private BookService bookService = new BookService() ; 
 
-	public boolean validateUser(String username, Integer accountId) {
+	public void validateUser(String username, Integer accountId) throws NoSuchUserException {
 		User user = userDao.getUser(username);
 		if(user!=null) {
 			Integer initAccountId = user.getAccountId();
 			if(initAccountId!=null && initAccountId.equals(accountId)) {
-				return true ; 
+				return;
 			}
 		}
-		return false;
+		throw new NoSuchUserException();
 	}
 
-	public void carsh(ShoppingCart cart, String username, Integer accountId) throws NoMoneyException {
-		User user = userDao.getUser(username);
+	public void validateBalance(Integer accountId, ShoppingCart cart) throws InsufficientBalanceException {
 		Account account = accountDao.getAccount(accountId);
-		
-		if(account.getBalance() < cart.getTotalMoney()) {
-			throw new NoMoneyException() ;
+		Double totalMoney = cart.getTotalMoney();
+		if(totalMoney <= account.getBalance() ) {
+			return ; 
 		}
-		//扣钱
-		accountDao.updateBalance(accountId, cart.getTotalMoney());
-		
-		//减库存
-		Collection<ShoppingCartItem> items = cart.getItemsCollection();
-		for (ShoppingCartItem item : items) {
-			Integer quantity = item.getQuantity();
-			Book book = item.getBook();
-			bookService
-		}
-		
-		
-		
-		cart.clear();
-	} 
+		throw new InsufficientBalanceException() ; 
+	}
+
 }

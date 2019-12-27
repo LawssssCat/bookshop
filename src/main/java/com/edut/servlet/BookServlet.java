@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -11,18 +12,24 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.edut.ex.InsufficientBalanceException;
+import com.edut.ex.NoSuchUserException;
 import com.edut.pojo.domain.Book;
+import com.edut.pojo.domain.User;
 import com.edut.pojo.web.CriteriaBook;
 import com.edut.pojo.web.Page;
 import com.edut.pojo.web.ShoppingCart;
 import com.edut.service.BookService;
-import com.edut.service.ShoppingCartService;
+import com.edut.service.ShoppingCartUtils;
+import com.edut.service.UnderStoreException;
+import com.edut.service.UserService;
 import com.edut.tools.Utils;
 import com.google.gson.Gson;
 
 public class BookServlet extends HttpServlet {
 	
 	private BookService bookService = new BookService() ; 
+	private UserService userService = new UserService() ; 
 
 	/**
 	 * 
@@ -67,9 +74,47 @@ public class BookServlet extends HttpServlet {
 		String page = req.getParameter("page");
 		req.getRequestDispatcher("/WEB-INF/pages/"+page+".jsp").forward(req, resp);
 	}
-	//cart 
-	private String cartStr =  "cart"; 
 	
+	protected void cash(HttpServletRequest req, HttpServletResponse resp) 
+			throws Exception {
+		String username = req.getParameter("username");
+		//解析失败 不处理
+		Integer accountId = Utils.parseStr(req.getParameter("accountId"),-1);
+		ShoppingCart cart = ShoppingCartUtils.getShoppingCart(req); 
+		try {
+			//验证账号
+			userService.validateUser(username, accountId) ; 
+			//验证余额
+			userService.validateBalance(accountId ,cart );
+			//验证库存
+			bookService.validateStore(cart) ; 
+			
+			//数据库 - 事务操作
+			
+			
+			//清理 session - cart
+			cart.clear(); 
+			resp.sendRedirect("success.jsp");
+			return ; 
+		}catch(NoSuchUserException ex) {
+			String errorMsg = "用户不存在或者账号错误!!";
+			req.setAttribute("errorMsg", errorMsg);
+		}catch (InsufficientBalanceException e) {
+			String errorMsg = "余额不足!!";
+			req.setAttribute("errorMsg", errorMsg);
+		}catch (UnderStoreException e) {
+			//库存异常
+			List<Book> underStoreBooks = e.getUnderStoreBooks();
+			StringBuilder sb = new StringBuilder("下面库存不足：") ; 
+			for (Book book : underStoreBooks) {
+				sb.append(book.getTitle()) ; 
+				sb.append("<br>") ; 
+			}
+			req.setAttribute("errorMsg", sb.toString());
+		}
+		//账号验证异常
+		req.getRequestDispatcher("/WEB-INF/pages/cash.jsp").forward(req,resp );
+	}
 	/**
 	 * 更新 item 里面 书的 数量
 	 */
@@ -80,27 +125,10 @@ public class BookServlet extends HttpServlet {
 		Integer id = Utils.parseStr(idStr, -1)  ; 
 		Integer quantity = Utils.parseStr(quantityStr, -1) ;
 		
-		ShoppingCart shoppingCart = ShoppingCartService.getShoppingCart(req, cartStr);
-		shoppingCart.setBookQuantity(id, quantity);
-
+		ShoppingCart shoppingCart = ShoppingCartUtils.getShoppingCart(req);
 		
-		HashMap<Object, Object> map = new HashMap<>();
-		//====  返回的 json  ======================== 
-		//单个 item 钱
-		Double itemMoney = shoppingCart.getItemMoney(id);
-		map.put("itemMoney", itemMoney ) ; 
-		//quantity
-		map.put("quantity", quantity);
-		//总价
-		Double totalMoney = shoppingCart.getTotalMoney();
-		map.put("totalMoney", totalMoney) ; 
-		//总书 number
-		Integer bookNumber = shoppingCart.getBookNumber();
-		map.put("bookNumber", bookNumber); 
-		
-		Gson gson = new Gson() ; 
-		String json = gson.toJson(map);
-		
+		String json = ShoppingCartUtils.getJsonUpdateItemQuantity(
+						shoppingCart , id , quantity );
 		
 		resp.setContentType("text/javascript");
 		resp.getWriter().write(json);
@@ -113,7 +141,7 @@ public class BookServlet extends HttpServlet {
 		//TODO id异常处理
 		
 		//ShoppingCart cart = ShoppingCartService.getShoppingCart(req, cartStr);
-		ShoppingCart cart = ShoppingCartService.getShoppingCart(req, cartStr);
+		ShoppingCart cart = ShoppingCartUtils.getShoppingCart(req);
 		
 		cart.removeItem(itemId);
 		
@@ -126,7 +154,7 @@ public class BookServlet extends HttpServlet {
 	}
 	protected void clearCart(HttpServletRequest req, HttpServletResponse resp) 
 			throws ServletException, IOException {
-		req.getSession().removeAttribute(cartStr);
+		req.getSession().removeAttribute("cart");
 		getBooks(req , resp) ; 
 	}
 	protected void getCart(HttpServletRequest req, HttpServletResponse resp) 
@@ -146,7 +174,7 @@ public class BookServlet extends HttpServlet {
 		}
 		
 		//2. 获取购物车对象
-		ShoppingCart cart = ShoppingCartService.getShoppingCart(req, cartStr); 
+		ShoppingCart cart = ShoppingCartUtils.getShoppingCart(req); 
 		
 		//3. 调用 BookService 的 addToCart() 方法 把商品放到购物车中
 		try {
