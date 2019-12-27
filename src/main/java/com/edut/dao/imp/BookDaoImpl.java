@@ -1,11 +1,13 @@
 package com.edut.dao.imp;
 
+import java.util.Collection;
 import java.util.List;
 
 import com.edut.dao.BookDao;
 import com.edut.pojo.domain.Book;
 import com.edut.pojo.web.CriteriaBook;
 import com.edut.pojo.web.Page;
+import com.edut.pojo.web.ShoppingCartItem;
 
 public class BookDaoImpl  extends BaseDao<Book> implements BookDao{
 
@@ -85,6 +87,14 @@ public class BookDaoImpl  extends BaseDao<Book> implements BookDao{
 				+ " from book_table "
 				+ "where book_id = ? " ; 
 		return getSingleVal(sql, id);
+	}
+
+	@Override
+	public void batchUpdateStoreNumberAndSalesAmount(Collection<ShoppingCartItem> items) {
+		for (ShoppingCartItem item : items) {
+			Integer quantity = item.getQuantity();
+			//TODO
+		}
 	}
 
 }

@@ -1,4 +1,4 @@
-package com.edut.pojo.domain;
+package com.edut.pojo.web;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -6,6 +6,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
+import com.edut.pojo.domain.Book;
 
 /**
  * map数据结构 key - bookID value - ShoppingCartItem
@@ -91,6 +93,18 @@ public class ShoppingCart {
 
 	public void removeItem(Integer itemId ) {
 		items.remove(itemId) ; 
+	}
+
+	public ShoppingCartItem getItemById(Integer itemId) {
+		return items.get(itemId) ; 
+	}
+	public void setBookQuantity(Integer id, Integer quantity)  {
+		ShoppingCartItem item = getItemById(id);
+		item.setQuantity(quantity); 
+	}
+
+	public Double getItemMoney(Integer id) {
+		return getItemById(id).getMoney();
 	}
 
 }
