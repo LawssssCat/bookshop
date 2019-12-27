@@ -21,7 +21,6 @@ import com.edut.pojo.web.ShoppingCartItem;
 public class UserService {
 	private UserDao userDao = new UserDaoImpl() ;
 	private AccountDao accountDao  = new AccountDaoImpl() ; 
-	private BookService bookService = new BookService() ; 
 
 	public void validateUser(String username, Integer accountId) throws NoSuchUserException {
 		User user = userDao.getUser(username);
@@ -41,6 +40,10 @@ public class UserService {
 			return ; 
 		}
 		throw new InsufficientBalanceException() ; 
+	}
+
+	public void updateBalance(Integer accountId, Double totalMoney) {
+		accountDao.updateBalance(accountId, totalMoney);
 	}
 
 }

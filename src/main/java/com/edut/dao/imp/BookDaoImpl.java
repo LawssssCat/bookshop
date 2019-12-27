@@ -1,5 +1,6 @@
 package com.edut.dao.imp;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -91,10 +92,20 @@ public class BookDaoImpl  extends BaseDao<Book> implements BookDao{
 
 	@Override
 	public void batchUpdateStoreNumberAndSalesAmount(Collection<ShoppingCartItem> items) {
+		String sql =  " update book_table set  "
+					+ " SALES_AMOUNT = SALES_AMOUNT + ? , "
+					+ " STORE_NUMBER = STORE_NUMBER - ? "
+					+ " where BOOK_ID = ?  " ;
+		int sqlSize = items.size();
+		Object[][] params = new Object[sqlSize][];
+		int index = 0 ; 
 		for (ShoppingCartItem item : items) {
 			Integer quantity = item.getQuantity();
-			//TODO
+			Integer bookID = item.getBook().getBookID();
+			params[index] = new Object[] {quantity  , quantity , bookID } ; 
+			index++ ; 
 		}
+		batch(sql, params);
 	}
 
 }

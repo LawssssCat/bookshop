@@ -73,7 +73,7 @@ public class Test_BaseDao {
 		String sql = "update book_table set sales_amount = ? , STORE_NUMBER = ? Where book_id= ?" ;
 		
 		//注意，這裡！sql 是怎麼寫的！！
-		bookDao.batch(sql, new Integer[]{1,1 , 1 } , new Integer[] {2,2 , 2 });
+		bookDao.batch(sql, new Integer[][] {{1,1,1},{2,2 , 2 }});
 		
 		
 		test_queryForList() ;

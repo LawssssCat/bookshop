@@ -49,5 +49,10 @@ public class BookService {
 			throw new UnderStoreException(underStoreBooks) ; 
 		}
 	}
+
+	public void batchUpdateStoreNumberAndSalesAmount(ShoppingCart cart) {
+		Collection<ShoppingCartItem> items = cart.getItemsCollection();
+		bookDao.batchUpdateStoreNumberAndSalesAmount(items);
+	}
 	
 }

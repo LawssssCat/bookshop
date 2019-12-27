@@ -90,7 +90,10 @@ public class BookServlet extends HttpServlet {
 			bookService.validateStore(cart) ; 
 			
 			//数据库 - 事务操作
-			
+			//1. 扣钱 
+			//2. 扣库存 、 加发货
+			userService.updateBalance(accountId , cart.getTotalMoney());
+			bookService.batchUpdateStoreNumberAndSalesAmount(cart); 
 			
 			//清理 session - cart
 			cart.clear(); 
