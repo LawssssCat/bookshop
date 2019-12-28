@@ -14,9 +14,9 @@ import org.junit.Test;
 import com.edut.dao.BookDao;
 import com.edut.dao.imp.BookDaoImpl;
 import com.edut.pojo.domain.Book;
-import com.edut.pojo.domain.ShoppingCart;
-import com.edut.pojo.domain.ShoppingCartItem;
 import com.edut.pojo.web.CriteriaBook;
+import com.edut.pojo.web.ShoppingCart;
+import com.edut.pojo.web.ShoppingCartItem;
 
 public class Test_ShopingCart {
 	

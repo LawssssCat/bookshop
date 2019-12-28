@@ -174,16 +174,16 @@ public class BaseDao<T> implements Dao<T>{
 	}
 
 	@Override
-	public void batch(String sql, Object[]... params) {
+	public void batch(String sql, Object[]... params) throws SQLException {
 		Connection  conn = null ; 
 		try {
+			
 			conn = JdbcUtils.getConn() ;
 			
 			queryRunner.batch(conn, sql, params) ; 
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw e ; 
 		} finally {
 			JdbcUtils.close(conn);
 		} 

@@ -1,11 +1,15 @@
 package com.edut.dao.imp;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import com.edut.dao.BookDao;
 import com.edut.pojo.domain.Book;
 import com.edut.pojo.web.CriteriaBook;
 import com.edut.pojo.web.Page;
+import com.edut.pojo.web.ShoppingCartItem;
 
 public class BookDaoImpl  extends BaseDao<Book> implements BookDao{
 
@@ -85,6 +89,24 @@ public class BookDaoImpl  extends BaseDao<Book> implements BookDao{
 				+ " from book_table "
 				+ "where book_id = ? " ; 
 		return getSingleVal(sql, id);
+	}
+
+	@Override
+	public void batchUpdateStoreNumberAndSalesAmount(Collection<ShoppingCartItem> items) throws SQLException {
+		String sql =  " update book_table set  "
+					+ " SALES_AMOUNT = SALES_AMOUNT + ? , "
+					+ " STORE_NUMBER = STORE_NUMBER - ? "
+					+ " where BOOK_ID = ?  " ;
+		int sqlSize = items.size();
+		Object[][] params = new Object[sqlSize][];
+		int index = 0 ; 
+		for (ShoppingCartItem item : items) {
+			Integer quantity = item.getQuantity();
+			Integer bookID = item.getBook().getBookID();
+			params[index] = new Object[] {quantity  , quantity , bookID } ; 
+			index++ ; 
+		}
+		batch(sql, params);
 	}
 
 }
