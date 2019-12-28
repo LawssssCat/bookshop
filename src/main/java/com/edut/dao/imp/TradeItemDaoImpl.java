@@ -16,7 +16,7 @@ import com.edut.tools.JdbcUtils;
 public class TradeItemDaoImpl extends BaseDao<TradeItem> implements TradeItemDao {
 
 	@Override
-	public void batchInsert(Long tradeId , Set<TradeItem> items) 
+	public void batchInsert(Integer tradeId , Set<TradeItem> items) 
 			throws SQLException  {
 		String sql =  " insert into trade_item_table "
 					+ " ( QUANTITY , BOOK_ID , TRADE_ID ) " 

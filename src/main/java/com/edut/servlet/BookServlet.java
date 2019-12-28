@@ -17,6 +17,7 @@ import com.edut.ex.FindEmptyException;
 import com.edut.ex.InsufficientBalanceException;
 import com.edut.ex.NoSuchBookException;
 import com.edut.ex.NoSuchUserException;
+import com.edut.ex.UnderStoreException;
 import com.edut.pojo.domain.Book;
 import com.edut.pojo.domain.User;
 import com.edut.pojo.web.CriteriaBook;
@@ -25,7 +26,6 @@ import com.edut.pojo.web.ShoppingCart;
 import com.edut.service.BookService;
 import com.edut.service.ShoppingCartUtils;
 import com.edut.service.TradeService;
-import com.edut.service.UnderStoreException;
 import com.edut.service.UserService;
 import com.edut.tools.Utils;
 import com.google.gson.Gson;
@@ -126,16 +126,16 @@ public class BookServlet extends HttpServlet {
 	protected void updateItemQuantity(HttpServletRequest req, HttpServletResponse resp) 
 			throws ServletException, IOException {
 		try {
-		Integer id = Integer.parseInt(req.getParameter("id")) ; 
-		Integer quantity = Integer.parseInt(req.getParameter("quantity")) ; 
-		
-		ShoppingCart shoppingCart = ShoppingCartUtils.getShoppingCart(req);
-		
-		String json = ShoppingCartUtils.getJsonUpdateItemQuantity(
-						shoppingCart , id , quantity );
-		
-		resp.setContentType("text/javascript");
-		resp.getWriter().write(json);
+			Integer id = Integer.parseInt(req.getParameter("id")) ; 
+			Integer quantity = Integer.parseInt(req.getParameter("quantity")) ; 
+			
+			ShoppingCart shoppingCart = ShoppingCartUtils.getShoppingCart(req);
+			
+			String json = ShoppingCartUtils.getJsonUpdateItemQuantity(
+							shoppingCart , id , quantity );
+			
+			resp.setContentType("text/javascript");
+			resp.getWriter().write(json);
 		}catch (NumberFormatException e) {
 			toErrorPage(req, resp);
 		}
