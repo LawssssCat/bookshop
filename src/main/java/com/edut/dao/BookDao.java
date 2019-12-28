@@ -1,5 +1,6 @@
 package com.edut.dao;
 
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 
@@ -52,5 +53,5 @@ public interface BookDao {
 	 * @param items
 	 */
 	public abstract void batchUpdateStoreNumberAndSalesAmount(
-			Collection<ShoppingCartItem> items);
+			Collection<ShoppingCartItem> items) throws SQLException;
 }

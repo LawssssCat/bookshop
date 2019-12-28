@@ -2,6 +2,7 @@ package com.edut.test.dao;
 
 
 import java.sql.Date;
+import java.sql.SQLException;
 import java.util.List;
 
 import org.junit.Test;
@@ -67,7 +68,7 @@ public class Test_BaseDao {
 	}
 	
 	@Test
-	public void test_batch() {
+	public void test_batch() throws SQLException {
 		test_queryForList() ;
 		
 		String sql = "update book_table set sales_amount = ? , STORE_NUMBER = ? Where book_id= ?" ;

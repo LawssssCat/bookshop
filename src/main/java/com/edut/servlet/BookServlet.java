@@ -90,11 +90,12 @@ public class BookServlet extends HttpServlet {
 	protected void cash(HttpServletRequest req, HttpServletResponse resp) 
 			throws ServletException, IOException {
 		try {
+			// uri 数据
 			String username = req.getParameter("username");
 			Integer accountId = Utils.parseStr(req.getParameter("accountId"),-1);
 			ShoppingCart cart = ShoppingCartUtils.getShoppingCart(req);
+			// 
 			tradeService.cash(username , accountId , cart ) ;
-			
 			resp.sendRedirect("success.jsp");
 			return ; 
 		}catch(NumberFormatException | SQLException e ) {

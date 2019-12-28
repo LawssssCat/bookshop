@@ -1,5 +1,6 @@
 package com.edut.service;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -57,9 +58,10 @@ public class BookService {
 		}
 	}
 
-	public void batchUpdateStoreNumberAndSalesAmount(ShoppingCart cart) {
+	public void batchUpdateStoreNumberAndSalesAmount(ShoppingCart cart)
+			throws SQLException {
 		Collection<ShoppingCartItem> items = cart.getItemsCollection();
-		bookDao.batchUpdateStoreNumberAndSalesAmount(items);
+		bookDao.batchUpdateStoreNumberAndSalesAmount(items) ;
 	}
 	
 }

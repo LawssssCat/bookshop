@@ -1,11 +1,33 @@
 package com.edut.pojo.domain;
 
 import java.util.Date;
+import java.util.Set;
 
 public class Trade {
 	private Integer tradeId ; 
 	private Date tradeTime ; 
+	
 	private Integer userId ;
+	
+	private Set<TradeItem> items ; 
+	
+	
+	public Trade() {
+		super();
+	}
+
+	public Trade(Integer userId  , Date tradeTime , Set<TradeItem> items ) {
+		this.userId = userId ; 
+		this.tradeTime = tradeTime ; 
+		this.items = items; 
+	}
+	
+	public Set<TradeItem> getTradeItems() {
+		return items ; 
+	}
+	
+	
+	
 	public Integer getTradeId() {
 		return tradeId;
 	}

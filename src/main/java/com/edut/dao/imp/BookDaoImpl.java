@@ -1,5 +1,6 @@
 package com.edut.dao.imp;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -91,7 +92,7 @@ public class BookDaoImpl  extends BaseDao<Book> implements BookDao{
 	}
 
 	@Override
-	public void batchUpdateStoreNumberAndSalesAmount(Collection<ShoppingCartItem> items) {
+	public void batchUpdateStoreNumberAndSalesAmount(Collection<ShoppingCartItem> items) throws SQLException {
 		String sql =  " update book_table set  "
 					+ " SALES_AMOUNT = SALES_AMOUNT + ? , "
 					+ " STORE_NUMBER = STORE_NUMBER - ? "

@@ -1,5 +1,6 @@
 package com.edut.dao;
 
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -58,5 +59,5 @@ public interface Dao<T> {
 	 * @param sql: 待执行的 SQL 语句
 	 * @param args: 填充占位符的可变参数
 	 */
-	public abstract void batch(String sql , Object[] ... params);
+	public abstract void batch(String sql , Object[] ... params) throws SQLException;
 }
