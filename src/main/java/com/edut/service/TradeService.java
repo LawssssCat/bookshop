@@ -1,5 +1,7 @@
 package com.edut.service;
 
+import java.sql.SQLException;
+
 import com.edut.dao.TradeDao;
 import com.edut.dao.imp.TradeDaoImpl;
 import com.edut.ex.InsufficientBalanceException;
@@ -20,7 +22,7 @@ public class TradeService {
 	public void cash(String username, Integer accountId, ShoppingCart cart)
 			throws NoSuchUserException, 
 			InsufficientBalanceException,
-			UnderStoreException {
+			UnderStoreException, SQLException {
 		//验证账号
 		userService.validateUser(username, accountId) ; 
 		//验证余额

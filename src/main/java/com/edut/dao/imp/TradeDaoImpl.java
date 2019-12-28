@@ -1,5 +1,6 @@
 package com.edut.dao.imp;
 
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Date;
 
@@ -14,20 +15,21 @@ public class TradeDaoImpl extends BaseDao<Trade> implements TradeDao  {
 	private TradeItemDao tradeItemDao  = new TradeItemDaoImpl() ;
 
 	@Override
-	public void saveTrade(Integer userId, ShoppingCart cart) {
-		//new trade 
-		insertNewTrade(userId , new java.sql.Date(new Date().getTime())) ; 
-		Collection<ShoppingCartItem> items = cart.getItemsCollection();
-		for (ShoppingCartItem item : items) {
-			//tsga
-			gasdgasd
-		}
+	public void saveTrade(Integer userId, ShoppingCart cart)
+			throws SQLException {
+		//new trade
+		Integer tradeId = insertNewTrade(
+				userId , 
+				new java.sql.Date(new Date().getTime())); 
+		Collection<ShoppingCartItem> cartItems = cart.getItemsCollection();
+		tradeItemDao.batchInsertItemDao(tradeId , cartItems) ;
 	}
 
 	@Override
 	public Integer insertNewTrade(Integer userId, Date date) {
-		String sql =  " insert into trade_item "
-					+ " value( null , ? , ? ) " ;
+		String sql =  " insert into trade_table "
+					+ " (trade_time , user_id) "
+					+ " value(  ? , ? ) " ;
 		long r = insert(sql , date , userId);
 		return (int) r ; 
 	}

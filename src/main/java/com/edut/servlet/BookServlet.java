@@ -3,6 +3,7 @@ package com.edut.servlet;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -96,7 +97,7 @@ public class BookServlet extends HttpServlet {
 			
 			resp.sendRedirect("success.jsp");
 			return ; 
-		}catch(NumberFormatException e ) {
+		}catch(NumberFormatException | SQLException e ) {
 			toErrorPage(req, resp);
 			return ; 
 		}catch(NoSuchUserException ex) {
