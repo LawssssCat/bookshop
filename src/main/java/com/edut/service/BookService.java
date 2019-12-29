@@ -9,6 +9,7 @@ import com.edut.dao.BookDao;
 import com.edut.dao.imp.BookDaoImpl;
 import com.edut.ex.FindEmptyException;
 import com.edut.ex.NoSuchBookException;
+import com.edut.ex.TransactionException;
 import com.edut.ex.UnderStoreException;
 import com.edut.pojo.domain.Book;
 import com.edut.pojo.web.CriteriaBook;
@@ -21,23 +22,29 @@ public class BookService {
 	private BookDao bookDao = new BookDaoImpl() ; 
 	
 	public Page<Book> getPage(CriteriaBook cb ) throws FindEmptyException {
-		Page<Book> page = bookDao.getPage(cb);
-		if(page!=null && page.getList().size()>0) {
-			return page ;    
-		}else {
+		Page<Book> page;
+		try {
+			page = bookDao.getPage(cb);
+		} catch (SQLException e) {
 			throw new FindEmptyException() ; 
+		}
+		return page ; 
+	}
+
+	public Book getBookById(Integer bookID) throws NoSuchBookException {
+		try {
+			return bookDao.getBook(bookID);
+		} catch (SQLException e) {
+			throw new NoSuchBookException() ;
 		}
 	}
 
-	public Book getBookById(Integer bookID) {
-		return bookDao.getBook(bookID);
-	}
-
 	public void addToCart(Integer bookID, ShoppingCart cart) throws NoSuchBookException {
-		Book book = getBookById(bookID);
-		if(book!=null) {
+		Book book;
+		try {
+			book = getBookById(bookID);
 			cart.add(book);
-		}else {
+		} catch (NoSuchBookException e) {
 			throw new NoSuchBookException() ; 
 		}
 	}
@@ -48,18 +55,20 @@ public class BookService {
 		for (ShoppingCartItem item : items) {
 			Integer quantity = item.getQuantity();
 			Integer bookId = item.getItemId();
-			Book book = getBookById(bookId);
-			Integer storeNumber = book.getStoreNumber();
-			if(storeNumber < quantity ) {
-				underStoreBooks.add(book) ; 
-			}
+			try {
+				Book book = getBookById(bookId);
+				Integer storeNumber = book.getStoreNumber();
+				if(storeNumber < quantity ) {
+					underStoreBooks.add(book) ; 
+				}
+			} catch (NoSuchBookException e) {/*找不到书不处理*/}
 		}
 		if(underStoreBooks.size()>0) {
-			throw new UnderStoreException(underStoreBooks) ; 
+			throw new UnderStoreException(underStoreBooks) ;
 		}
 	}
 
-	public void batchUpdateStoreNumberAndSalesAmount(ShoppingCart cart)
+	public void batchUpdateStoreNumberAndSalesAmount(ShoppingCart cart) 
 			throws SQLException {
 		Collection<ShoppingCartItem> items = cart.getItemsCollection();
 		bookDao.batchUpdateStoreNumberAndSalesAmount(items) ;

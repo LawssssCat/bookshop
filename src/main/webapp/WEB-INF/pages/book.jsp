@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8"/>
-<title></title>
+<title> 书详情！  </title>
 <script type="text/javascript" src="script/jquery-1.8.3.min.js"></script>
 <jsp:include page="/common/addmin&maxPricetoURL.jsp"></jsp:include>
 

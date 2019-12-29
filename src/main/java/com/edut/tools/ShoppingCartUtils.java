@@ -1,4 +1,4 @@
-package com.edut.service;
+package com.edut.tools;
 
 import java.util.HashMap;
 import java.util.Map;

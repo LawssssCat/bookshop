@@ -26,7 +26,7 @@ public class TradeDaoImpl extends BaseDao<Trade> implements TradeDao  {
 	}
 
 	@Override
-	public void createEmptyTrade(Trade trade) {
+	public void  createEmptyTrade(Trade trade) throws SQLException {
 		//创建一个空trade
 		String sql =  " insert into trade_table "
 					+ " (trade_id , TRADE_TIME , USER_ID) "
@@ -36,6 +36,8 @@ public class TradeDaoImpl extends BaseDao<Trade> implements TradeDao  {
 		Integer tradeId = Integer.parseInt(""+ i);  //得到 tradeId
 		trade.setTradeId(tradeId);
 	}
+
+
 
 
 	

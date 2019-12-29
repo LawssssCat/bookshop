@@ -2,6 +2,7 @@ package com.edut.test.pojo;
 
 import static org.junit.Assert.*;
 
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -30,7 +31,12 @@ public class Test_ShopingCart {
 		
 		int pageSize = 6;
 		cb = new CriteriaBook(0, Integer.MAX_VALUE, 1); 
-		books = bookDao.getPageList(cb, pageSize );
+		try {
+			books = bookDao.getPageList(cb, pageSize );
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		shoppingCart = new ShoppingCart() ;
 	}
 

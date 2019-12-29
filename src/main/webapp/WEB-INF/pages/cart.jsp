@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8"/>
-<title></title>
+<title> 购物车 ！</title>
 
 <script type="text/javascript" src="script/jquery-1.8.3.min.js"></script>
 
