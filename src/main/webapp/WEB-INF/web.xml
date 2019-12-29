@@ -9,21 +9,27 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
-  <!-- 
+
+<!-- =============  request解码  ===================== -->
   <filter>
 	<filter-name>encodingFilter</filter-name>
-	<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+	<filter-class>com.edut.filter.CharacterEncodingFilter</filter-class>
 	<init-param>
 		<param-name>Encoding</param-name>
-		<param-value>UTF8</param-value>
+		<param-value>utf-8</param-value>
 	</init-param>
   </filter>
   <filter-mapping>
 	<filter-name>encodingFilter</filter-name>
 	<url-pattern>/*</url-pattern>
+	<dispatcher>ERROR</dispatcher>
+	<dispatcher>FORWARD</dispatcher>
+	<dispatcher>INCLUDE</dispatcher>
+	<dispatcher>REQUEST</dispatcher>
   </filter-mapping>
- -->
+
   
+<!-- =============  服务1：  ========================== -->
   <servlet>
   	<servlet-name>bookServlet</servlet-name>
   	<servlet-class>com.edut.servlet.BookServlet</servlet-class>
@@ -33,12 +39,5 @@
   	<url-pattern>/bookServlet</url-pattern>
   </servlet-mapping>
   
-  <servlet>
-  	<servlet-name>UserServlet</servlet-name>
-  	<servlet-class>com.edut.servlet.UserServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-  	<servlet-name>UserServlet</servlet-name>
-  	<url-pattern>/UserServlet</url-pattern>
-  </servlet-mapping>
+
 </web-app>
