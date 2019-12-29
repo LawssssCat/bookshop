@@ -2,6 +2,7 @@ package com.edut.test.dao;
 
 import static org.junit.Assert.*;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import org.junit.Test;
@@ -16,7 +17,7 @@ public class Test_BookDao {
 	private BookDao bookDao = new BookDaoImpl() ; 
 
 	@Test
-	public void testGetBook() {
+	public void testGetBook() throws SQLException {
 		Book book = bookDao.getBook(2);
 		System.out.println(book);
 	}
@@ -25,7 +26,7 @@ public class Test_BookDao {
 	
 	
 	@Test
-	public void testGetPage() {
+	public void testGetPage() throws SQLException {
 		Page<Book> page = bookDao.getPage(cb);
 		
 		System.out.println("@@@@@@@@@  ---------  Page Info  -----------");
@@ -45,14 +46,14 @@ public class Test_BookDao {
 	
 
 	@Test
-	public void testGetTotalBookNumber() {
+	public void testGetTotalBookNumber() throws SQLException {
 		long totalBookNumber = bookDao.getTotalBookNumber(cb);
 		
 		System.out.println("totalBookNumber : "+totalBookNumber);
 	}
 
 	@Test
-	public void testGetPageList() {
+	public void testGetPageList() throws SQLException {
 		List<Book> pageList = bookDao.getPageList(cb, 3);
 		
 		for (Book book : pageList) {
@@ -61,7 +62,7 @@ public class Test_BookDao {
 	}
 
 	//@Test
-	public void testGetStoreNumber() {
+	public void testGetStoreNumber() throws SQLException {
 		int storeNumber = bookDao.getStoreNumber(1);
 		System.out.println("storeNumber="+ storeNumber);
 	}

@@ -18,30 +18,28 @@ public class TradeDaoImpl extends BaseDao<Trade> implements TradeDao  {
 	
 	@Override
 	public void saveTrade(Trade trade) throws SQLException {
-		Long tradeId = createEmptyTrade();
-		String sql =  " update trade_table "
-					+ " set "
-					+ " Trade_time = ? , "
-					+ " User_id = ? "
-					+ " where Trade_id = ? " ; 
-		Integer userId = trade.getUserId() ; 
-		Date time = new Date(new java.util.Date().getTime()) ; 
-		update(sql, time , userId , tradeId);
+		createEmptyTrade(trade);
 		
 		//存 tradeitems
 		Set<TradeItem> items = trade.getTradeItems();
-		tradeItemDao.batchInsert(tradeId, items) ;
+		tradeItemDao.batchInsert(trade.getTradeId(), items) ;
 	}
 
 	@Override
-	public Long createEmptyTrade() {
+	public void  createEmptyTrade(Trade trade) throws SQLException {
 		//创建一个空trade
 		String sql =  " insert into trade_table "
-					+ " (trade_id) "
+					+ " (trade_id , TRADE_TIME , USER_ID) "
 					+ " value "
-					+ " ( null )" ;
-		return insert(sql) ;  //得到 tradeId
+					+ " ( null , ? ,?   )" ;
+		Long i = insert(sql , trade.getTradeTime() , trade.getUserId());
+		Integer tradeId = Integer.parseInt(""+ i);  //得到 tradeId
+		trade.setTradeId(tradeId);
 	}
+
+
+
+
 	
 	
 

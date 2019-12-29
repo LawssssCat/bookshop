@@ -63,6 +63,9 @@ td th{
 <!-- 开始光标位置 -->
 
 	<div align="center">
+	<hr>
+	<br><br>
+	<h3> ~ ~ Hello Books ~ ~ </h3>
 	
 	<c:if test="${not empty param.bookTitle}">
 		成功把 <font color="red">《${param.bookTitle}》</font> 加入购物车！

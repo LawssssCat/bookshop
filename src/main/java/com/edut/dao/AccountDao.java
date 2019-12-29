@@ -1,5 +1,7 @@
 package com.edut.dao;
 
+import java.sql.SQLException;
+
 import com.edut.pojo.domain.Account;
 
 public interface AccountDao {
@@ -11,7 +13,7 @@ public interface AccountDao {
 	 * @param accountId
 	 * @return
 	 */
-	public abstract Account getAccount(Integer accountId) ;
+	public abstract Account getAccount(Integer accountId)  throws SQLException  ;
 	
 	/**
 	 * 更新余额
@@ -21,6 +23,6 @@ public interface AccountDao {
 	 * @param accountId
 	 * @param double1
 	 */
-	public abstract void updateBalance(Integer  accountId , Double double1) ;
+	public abstract void updateBalance(Integer  accountId , Double double1) throws SQLException  ;
 	
 }

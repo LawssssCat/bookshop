@@ -13,5 +13,5 @@ public interface TradeDao {
 
 	void saveTrade(Trade trade) throws SQLException;
 	
-	Long createEmptyTrade() ; 
+	void createEmptyTrade(Trade trade)   throws SQLException ; 
 }

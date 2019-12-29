@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8"/>
-<title></title>
+<title> 书详情！  </title>
 <script type="text/javascript" src="script/jquery-1.8.3.min.js"></script>
 <jsp:include page="/common/addmin&maxPricetoURL.jsp"></jsp:include>
 
@@ -16,7 +16,10 @@
 
 
 <div align="center" >
+<hr>
+<br><br>
 <h3> 书目 - 详情 </h3>
+<br><br>
 
     书名:${book.title }
     <br><br>
