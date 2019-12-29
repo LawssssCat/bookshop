@@ -1,4 +1,4 @@
-package com.edut.service;
+package com.edut.ex;
 
 import java.util.List;
 

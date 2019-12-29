@@ -2,6 +2,8 @@ package com.edut.test.dao;
 
 import static org.junit.Assert.*;
 
+import java.sql.SQLException;
+
 import org.junit.Test;
 
 import com.edut.dao.AccountDao;
@@ -15,13 +17,13 @@ public class Test_AccountDao {
 		accountDao = new AccountDaoImpl() ; 
 	}
 	
-	public void testGetAccount(int id ) {
+	public void testGetAccount(int id ) throws SQLException {
 		Account account = accountDao.getAccount(id); 
 		System.out.println(account);
 	}
 
 	@Test
-	public void testUpdateBalance() {
+	public void testUpdateBalance() throws SQLException {
 		int id = 1; 
 		testGetAccount(id); 
 		accountDao.updateBalance(id, 100.0);

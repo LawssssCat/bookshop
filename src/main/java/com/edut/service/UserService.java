@@ -1,5 +1,6 @@
 package com.edut.service;
 
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -12,6 +13,7 @@ import com.edut.dao.imp.UserDaoImpl;
 import com.edut.ex.InsufficientBalanceException;
 import com.edut.ex.NoMoneyException;
 import com.edut.ex.NoSuchUserException;
+import com.edut.ex.TransactionException;
 import com.edut.pojo.domain.Account;
 import com.edut.pojo.domain.Book;
 import com.edut.pojo.domain.User;
@@ -42,16 +44,22 @@ public class UserService {
 		throw new NoSuchUserException();
 	}
 
-	public void validateBalance(Integer accountId, ShoppingCart cart) throws InsufficientBalanceException {
-		Account account = accountDao.getAccount(accountId);
-		Double totalMoney = cart.getTotalMoney();
-		if(totalMoney <= account.getBalance() ) {
-			return ; 
+	public void validateBalance(Integer accountId, ShoppingCart cart) 
+			throws InsufficientBalanceException, SQLException{
+		Account account;
+		try {
+			account = accountDao.getAccount(accountId);
+			Double totalMoney = cart.getTotalMoney();
+			if(totalMoney > account.getBalance() ) {
+				throw new InsufficientBalanceException() ; 
+			}
+		} catch (SQLException e) {
+			throw new SQLException() ; 
 		}
-		throw new InsufficientBalanceException() ; 
 	}
 
-	public void updateBalance(Integer accountId, Double totalMoney) {
+	public void updateBalance(Integer accountId, Double totalMoney) 
+			throws SQLException  {
 		accountDao.updateBalance(accountId, totalMoney);
 	}
 

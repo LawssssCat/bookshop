@@ -34,7 +34,7 @@ public class TradeDaoImpl extends BaseDao<Trade> implements TradeDao  {
 	}
 
 	@Override
-	public Long createEmptyTrade() {
+	public Long createEmptyTrade() throws SQLException {
 		//创建一个空trade
 		String sql =  " insert into trade_table "
 					+ " (trade_id) "

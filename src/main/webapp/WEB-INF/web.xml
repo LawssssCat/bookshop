@@ -10,7 +10,8 @@
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
 
-<!-- =============  request解码  ===================== -->
+<!-- =============  request解码（必须最先拦截！）  ============ -->
+
   <filter>
 	<filter-name>encodingFilter</filter-name>
 	<filter-class>com.edut.filter.CharacterEncodingFilter</filter-class>
@@ -27,9 +28,22 @@
 	<dispatcher>INCLUDE</dispatcher>
 	<dispatcher>REQUEST</dispatcher>
   </filter-mapping>
-
   
-<!-- =============  服务1：  ========================== -->
+<!-- =============  request解码（必须最先拦截！）  ============ -->
+	<filter>
+		<filter-name>TransactionFilter</filter-name>
+		<filter-class>com.edut.filter.TransactionFilter</filter-class>
+	</filter>
+	<filter-mapping>
+	<filter-name>TransactionFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+		<dispatcher>ERROR</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
+		<dispatcher>REQUEST</dispatcher>
+	</filter-mapping>
+<!-- =============  服务1：  ============================== -->
+
   <servlet>
   	<servlet-name>bookServlet</servlet-name>
   	<servlet-class>com.edut.servlet.BookServlet</servlet-class>

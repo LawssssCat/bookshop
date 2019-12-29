@@ -5,8 +5,13 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title> 结账！ </title>
+
+<script type="text/javascript" src="script/jquery-1.8.3.min.js"></script>
+
+<!-- 记录查询记录 -->
 <jsp:include page="/common/addmin&maxPricetoURL.jsp"></jsp:include>
+
 </head>
 <body>
 	<center>
@@ -43,6 +48,8 @@
 		
 		<hr>
 		<a  href="bookServlet?method=toPage&page=cart&pageNo=${param.pageNo }">返回	购物车</a>
+		&nbsp;&nbsp;
+		<a  href="bookServlet?method=getBooks&pageNo=${param.pageNo }">返回	图书列表</a>
 	</center>
 </body>
 </html>

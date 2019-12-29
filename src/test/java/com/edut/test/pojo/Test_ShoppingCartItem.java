@@ -1,5 +1,7 @@
 package com.edut.test.pojo;
 
+import java.sql.SQLException;
+
 import org.junit.Test;
 
 import com.edut.dao.BookDao;
@@ -14,7 +16,13 @@ public class Test_ShoppingCartItem {
 	
 	{
 		bookDao = new BookDaoImpl() ; 
-		Book book = bookDao.getBook(1);
+		Book book = null;
+		try {
+			book = bookDao.getBook(1);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		item = new ShoppingCartItem(book) ; 
 	}
 	

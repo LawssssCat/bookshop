@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.SQLException;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 
@@ -17,16 +18,17 @@ import com.edut.ex.FindEmptyException;
 import com.edut.ex.InsufficientBalanceException;
 import com.edut.ex.NoSuchBookException;
 import com.edut.ex.NoSuchUserException;
+import com.edut.ex.TransactionException;
+import com.edut.ex.UnderStoreException;
 import com.edut.pojo.domain.Book;
 import com.edut.pojo.domain.User;
 import com.edut.pojo.web.CriteriaBook;
 import com.edut.pojo.web.Page;
 import com.edut.pojo.web.ShoppingCart;
 import com.edut.service.BookService;
-import com.edut.service.ShoppingCartUtils;
 import com.edut.service.TradeService;
-import com.edut.service.UnderStoreException;
 import com.edut.service.UserService;
+import com.edut.tools.ShoppingCartUtils;
 import com.edut.tools.Utils;
 import com.google.gson.Gson;
 
@@ -52,12 +54,14 @@ public class BookServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+			throws ServletException, IOException {
 		doPost(req, resp);
 	}
 	
 	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) 
+			throws ServletException, IOException {
 		//获取方法名 
 		String methodName = req.getParameter("method");
 		try {
@@ -66,59 +70,32 @@ public class BookServlet extends HttpServlet {
 					HttpServletRequest.class , HttpServletResponse.class) ;
 			method.setAccessible(true); 
 			method.invoke(this, req , resp ) ; 
-		} catch (NoSuchMethodException e) {
-			toErrorPage(req, resp);
-		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
+		} catch (Exception e ) {
+			throw new RuntimeException(e) ;  
+		}
 	}
 	
 
 	/**
 	 * 支付！ 
+	 * @throws IOException 
+	 * @throws ServletException 
 	 */
-	protected void cash(HttpServletRequest req, HttpServletResponse resp) 
-			throws ServletException, IOException {
+	protected void cash(HttpServletRequest req, HttpServletResponse resp)
+			throws IOException, ServletException  {
+		// uri 数据
 		try {
-			// uri 数据
 			String username = req.getParameter("username");
-			Integer accountId = Utils.parseStr(req.getParameter("accountId"),-1);
+			Integer accountId = Integer.parseInt(req.getParameter("accountId")) ; 
 			ShoppingCart cart = ShoppingCartUtils.getShoppingCart(req);
-			// 
 			tradeService.cash(username , accountId , cart ) ;
 			resp.sendRedirect("success.jsp");
-			return ; 
-		}catch(NumberFormatException | SQLException e ) {
-			toErrorPage(req, resp);
-			return ; 
-		}catch(NoSuchUserException ex) {
-			String errorMsg = "用户不存在或者账号错误!!";
+		} catch (TransactionException e) {
+			String errorMsg = e.getErrorMsg();
 			req.setAttribute("errorMsg", errorMsg);
-		}catch (InsufficientBalanceException e) {
-			String errorMsg = "余额不足!!";
-			req.setAttribute("errorMsg", errorMsg);
-		}catch (UnderStoreException e) {
-			//库存异常
-			List<Book> underStoreBooks = e.getUnderStoreBooks();
-			StringBuilder sb = new StringBuilder("下面库存不足：<br>") ; 
-			for (Book book : underStoreBooks) {
-				sb.append(book.getTitle()) ; 
-				sb.append("<br>") ; 
-			}
-			req.setAttribute("errorMsg", sb.toString());
+			toPage(req, resp,"cash");
+			throw new ServletException(e) ; 
 		}
-		//账号验证异常
-		toPage(req, resp , "cash");
 	}
 	/**
 	 * 更新 item 里面 书的 数量
@@ -126,16 +103,16 @@ public class BookServlet extends HttpServlet {
 	protected void updateItemQuantity(HttpServletRequest req, HttpServletResponse resp) 
 			throws ServletException, IOException {
 		try {
-		Integer id = Integer.parseInt(req.getParameter("id")) ; 
-		Integer quantity = Integer.parseInt(req.getParameter("quantity")) ; 
-		
-		ShoppingCart shoppingCart = ShoppingCartUtils.getShoppingCart(req);
-		
-		String json = ShoppingCartUtils.getJsonUpdateItemQuantity(
-						shoppingCart , id , quantity );
-		
-		resp.setContentType("text/javascript");
-		resp.getWriter().write(json);
+			Integer id = Integer.parseInt(req.getParameter("id")) ; 
+			Integer quantity = Integer.parseInt(req.getParameter("quantity")) ; 
+			
+			ShoppingCart shoppingCart = ShoppingCartUtils.getShoppingCart(req);
+			
+			String json = ShoppingCartUtils.getJsonUpdateItemQuantity(
+							shoppingCart , id , quantity );
+			
+			resp.setContentType("text/javascript");
+			resp.getWriter().write(json);
 		}catch (NumberFormatException e) {
 			toErrorPage(req, resp);
 		}
@@ -195,7 +172,7 @@ public class BookServlet extends HttpServlet {
 			req.setAttribute("book", book);
 			req.getRequestDispatcher("/WEB-INF/pages/book.jsp").forward(req, resp);
 			
-		}catch (NumberFormatException e) {
+		}catch (NumberFormatException | NoSuchBookException e) {
 			toErrorPage(req , resp) ; 
 		}
 	}
@@ -213,7 +190,7 @@ public class BookServlet extends HttpServlet {
 			CriteriaBook cb = new CriteriaBook(minPrice, maxPrice, pageNo);
 			//FindEmptyException
 			Page<Book> page = bookService.getPage(cb);
-					req.setAttribute("page", page);
+			req.setAttribute("page", page);
 			req.getRequestDispatcher("/WEB-INF/pages/books.jsp").forward(req, resp);
 		}catch (FindEmptyException  e ) {
 			toErrorPage(req , resp) ; 

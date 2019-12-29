@@ -14,7 +14,7 @@ import com.edut.pojo.web.ShoppingCartItem;
 public class BookDaoImpl  extends BaseDao<Book> implements BookDao{
 
 	@Override
-	public Book getBook(int id) {
+	public Book getBook(int id) throws SQLException {
 		String sql = "SELECT "
 				+ " book_id bookid, "
 				+ " author , "
@@ -30,7 +30,7 @@ public class BookDaoImpl  extends BaseDao<Book> implements BookDao{
 	}
 
 	@Override
-	public Page<Book> getPage(CriteriaBook cb) {
+	public Page<Book> getPage(CriteriaBook cb) throws SQLException {
 		
 		//No
 		Page<Book> page = new Page<>(cb.getPageNo());
@@ -52,7 +52,7 @@ public class BookDaoImpl  extends BaseDao<Book> implements BookDao{
 	}
 
 	@Override
-	public long getTotalBookNumber(CriteriaBook cb) {
+	public long getTotalBookNumber(CriteriaBook cb) throws SQLException {
 		String sql = "select count(book_id) "
 				+ "from book_table "
 				+ "where price>=? and price <=? " ; 
@@ -61,9 +61,10 @@ public class BookDaoImpl  extends BaseDao<Book> implements BookDao{
 
 	/**
 	 * MySQL 分页使用 LIMIT，其中 limit 从 0开始。
+	 * @throws SQLException 
 	 */
 	@Override
-	public List<Book> getPageList(CriteriaBook cb, int pageSize) {
+	public List<Book> getPageList(CriteriaBook cb, int pageSize) throws SQLException {
 		String sql = " select "
 				+ " book_id bookid, "
 				+ " author , "
@@ -84,7 +85,7 @@ public class BookDaoImpl  extends BaseDao<Book> implements BookDao{
 	}
 
 	@Override
-	public int getStoreNumber(Integer id) {
+	public int getStoreNumber(Integer id) throws SQLException {
 		String sql = "Select Store_Number StoreNumber "
 				+ " from book_table "
 				+ "where book_id = ? " ; 

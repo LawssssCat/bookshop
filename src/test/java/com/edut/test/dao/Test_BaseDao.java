@@ -20,7 +20,7 @@ public class Test_BaseDao {
 	
 	
 	//@Test
-	public void test_insert() {
+	public void test_insert() throws SQLException {
 		String sql = "INSERT INTO Trade_table (user_id , trade_time) VALUES (? ,? ) " ;
 		Long id = baseDao.insert(sql, 1, new Date(new java.util.Date().getTime())); 
 		
@@ -28,14 +28,14 @@ public class Test_BaseDao {
 	}
 	
 	//@Test 
-	public void test_update() {
+	public void test_update() throws SQLException {
 		String sql = "UPDATE  Trade_table set  user_id= ? where user_id= ?;" ;
 		baseDao.update(sql, 2 ,1 );
 		System.out.println("test_update。。。");
 	}
 	
 	//@Test
-	public void test_query() {
+	public void test_query() throws SQLException {
 		String sql = "select * from book_table WHERE BOOK_ID = ? " ;
 		Book query = bookDao.query(sql , 1);
 		System.out.println("\n@@@@@@@@@@@@@@ ===  test_query  =============\n");
@@ -43,7 +43,7 @@ public class Test_BaseDao {
 	}
 	
 	//@Test
-	public void test_queryForList() {
+	public void test_queryForList() throws SQLException {
 		String sql = "select * from book_table " ;
 		List<Book> list = bookDao.queryForList(sql );
 		System.out.println("\n@@@@@@@@@@@@@@ ===  test_queryForList  =============\n");
@@ -53,14 +53,14 @@ public class Test_BaseDao {
 	}
 	
 	//@Test
-	public void test_getSingleVal() {
+	public void test_getSingleVal() throws SQLException {
 		String sql = "select publishing_date from book_table where  book_id = ? " ;
 		Date date  = bookDao.getSingleVal(sql, 1);
 		System.out.println(date);
 	}
 	
 	//@Test
-	public void test_getSingleVal2() {
+	public void test_getSingleVal2() throws SQLException {
 		String sql = "select count(book_id) from book_table " ;
 		long count   = bookDao.getSingleVal(sql);
 		System.out.println(count);
