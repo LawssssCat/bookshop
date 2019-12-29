@@ -11,5 +11,5 @@ import com.edut.pojo.web.ShoppingCartItem;
 
 public interface TradeItemDao {
 
-	void batchInsert(Long tradeId , Set<TradeItem> items) throws SQLException;
+	void batchInsert(Integer tradeId , Set<TradeItem> items) throws SQLException;
 }

@@ -10,6 +10,7 @@
 </head>
 <body>
 	<center>
+	<hr>
 		<br><br>
 		<h3>结账</h3>
 		<br><br>

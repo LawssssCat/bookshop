@@ -105,6 +105,12 @@
 </head>
 <body>
 <div align="center">
+
+<hr>
+<br><br>
+<h3>购物车</h3>
+<br><br>
+
 	您的购物车中有  <font id="bookNumber">${sessionScope.cart.bookNumber }</font> 本书
 	<br><br>
 	<table border="1">

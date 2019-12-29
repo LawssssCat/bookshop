@@ -10,6 +10,7 @@ import com.edut.dao.TradeDao;
 import com.edut.dao.imp.TradeDaoImpl;
 import com.edut.ex.InsufficientBalanceException;
 import com.edut.ex.NoSuchUserException;
+import com.edut.ex.UnderStoreException;
 import com.edut.pojo.domain.Trade;
 import com.edut.pojo.domain.TradeItem;
 import com.edut.pojo.web.ShoppingCart;

@@ -16,7 +16,10 @@
 
 
 <div align="center" >
+<hr>
+<br><br>
 <h3> 书目 - 详情 </h3>
+<br><br>
 
     书名:${book.title }
     <br><br>
