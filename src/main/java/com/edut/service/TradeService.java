@@ -100,6 +100,14 @@ public class TradeService {
 		Date tradeTime = new java.sql.Date(new Date().getTime());
 		return new Trade(userId , tradeTime  , items) ; 
 	}
+
+	public Set<Trade> getTradesByUserId(Integer userId) throws SQLException {
+		
+		List<Trade> queryForList = tradeDao.getTradesWithItems(userId);
+		
+		
+		return null;
+	}
 	
 	
 
