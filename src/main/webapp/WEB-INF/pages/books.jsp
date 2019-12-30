@@ -61,7 +61,7 @@ td th{
 </head>
 <body>
 <!-- 开始光标位置 -->
-
+<a href="userServlet?method=toLogin&pageNo=${page.pageNo }">查看交易记录</a>
 	<div align="center">
 	<hr>
 	<br><br>
