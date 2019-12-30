@@ -53,5 +53,16 @@
   	<url-pattern>/bookServlet</url-pattern>
   </servlet-mapping>
   
+<!-- =============  服务2：  ============================== -->
+
+  <servlet>
+  	<servlet-name>userServlet</servlet-name>
+  	<servlet-class>com.edut.servlet.UserServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>userServlet</servlet-name>
+  	<url-pattern>/userServlet</url-pattern>
+  </servlet-mapping>
+  
 
 </web-app>
