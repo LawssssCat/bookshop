@@ -22,12 +22,16 @@ public class Trade {
 		this.items = items; 
 	}
 	
-	public Set<TradeItem> getTradeItems() {
+	public Set<TradeItem> getItems() {
 		return items ; 
 	}
 	
 	
 	
+	public void setItems(Set<TradeItem> items) {
+		this.items = items;
+	}
+
 	public Integer getTradeId() {
 		return tradeId;
 	}

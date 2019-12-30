@@ -1,5 +1,7 @@
 package com.edut.pojo.domain;
 
+import java.util.Set;
+
 import com.edut.pojo.web.ShoppingCartItem;
 
 public class TradeItem {
@@ -7,6 +9,9 @@ public class TradeItem {
 	private Integer quantity ; 
 	private Integer bookId ; 
 	private Integer tradeId ;
+	
+	private Book book ; 
+	
 	
 	public TradeItem() {} ; 
 	/**
@@ -88,7 +93,14 @@ public class TradeItem {
 		} else if (!tradeId.equals(other.tradeId))
 			return false;
 		return true;
-	} 
+	}
+	public Book getBook() {
+		return book;
+	}
+	public void setBook(Book book) {
+		this.book = book;
+	}
+
 	
 	
 }
